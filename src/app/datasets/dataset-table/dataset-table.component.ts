@@ -105,7 +105,7 @@ export class DatasetTableComponent implements OnInit, OnDestroy, AfterViewInit {
       const datePipe = new DatePipe('en-US');
       const formattedDate = datePipe.transform(date, 'dd/MM/yyyy HH:mm');
       return formattedDate;
-    };
+    }
 
     if (field === 'size') {
       return filesize(value || 0);
@@ -119,7 +119,7 @@ export class DatasetTableComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       return 'Unknown';
     }
-    
+
     return value;
   }
 
@@ -140,7 +140,7 @@ export class DatasetTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.subscriptions.push(this.store.select(state => state.root.dashboardUI.mode).subscribe(mode => {
       this.mode = mode;
-      this.updateRowView(mode);
+      // this.updateRowView(mode);
     }));
 
 
@@ -156,7 +156,7 @@ export class DatasetTableComponent implements OnInit, OnDestroy, AfterViewInit {
           this.datasets = data;
           this.dataSource = new MatTableDataSource(this.datasets);
           this.dataSource.sort = this.sort;
-          this.updateRowView(this.mode);
+          // this.updateRowView(this.mode);
         },
         error => {
           console.error(error);

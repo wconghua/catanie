@@ -13,12 +13,16 @@ import { Observable } from 'rxjs/Observable';
 import * as lb from 'shared/sdk/services';
 import * as DatasetActions from 'state-management/actions/datasets.actions';
 import * as UserActions from 'state-management/actions/user.actions';
+import * as DashboardUIActions from 'state-management/actions/dashboard-ui.actions';
 
 import { Message, MessageType } from 'state-management/models';
+
+import { config } from '../../../config/config';
 
 // import store state interface
 @Injectable()
 export class DatasetEffects {
+
 
   @Effect()
   protected getDataset$: Observable<Action> =
@@ -146,8 +150,14 @@ export class DatasetEffects {
       .map((action: DatasetActions.UpdateFilterAction) => action.payload)
       .switchMap(payload => {
         const fq = Object.assign({}, payload);
-        const match = handleFacetPayload(fq);
         const filter = {};
+        const dl = {'relation': 'datasetlifecycle'};
+        if (fq['mode'].toLowerCase() === 'archive') {
+          dl['where'] = {'inq': config.archiveable};
+        } else if (fq['mode'].toLowerCase() === 'retrieve') {
+          dl['where'] = {'inq': config.retrieveable};
+        }
+        const match = handleFacetPayload(fq);
         if (match.length > 1) {
           filter['where'] = {};
 
@@ -158,7 +168,7 @@ export class DatasetEffects {
 
         filter['limit'] = fq['limit'] ? fq['limit'] : 30;
         filter['skip'] = fq['skip'] ? fq['skip'] : 0;
-        filter['include'] = [{ relation: 'datasetlifecycle' }];
+        filter['include'] = [dl];
         if (fq['sortField']) {
           filter['order'] = fq['sortField'];
         }
@@ -171,21 +181,7 @@ export class DatasetEffects {
             return Observable.of(new DatasetActions.SearchFailedAction(err));
           });
       });
-  // @Effect()
-  // protected getGroups$: Observable<Action> =
-  //     this.action$.ofType(DatasetActions.ADD_GROUPS)
-  //         .debounceTime(300)
-  //         .map(toPayload)
-  //         .switchMap(payload => {
-  //           return this.userIdentitySrv.findOne({'where': {'userId': payload}})
-  //               .switchMap(res => {
-  //                 return Observable.of(new DatasetActions.AddGroupsCompleteAction(res['profile']['accessGroups']));
-  //               })
-  //               .catch(err => {
-  //                 console.error(err);
-  //                 return Observable.of(new DatasetActions.AddGroupsFailedAction(err));
-  //               });
-  //         });
+
 
   @Effect()
   protected deleteDatablocks$: Observable<Action> =
@@ -282,7 +278,8 @@ export class DatasetEffects {
     private dls: lb.DatasetLifecycleApi, private dbs: lb.DatablockApi,
     private odbs: lb.OrigDatablockApi,
     private userIdentitySrv: lb.UserIdentityApi,
-    private accessUserSrv: lb.AccessUserApi) { }
+    private accessUserSrv: lb.AccessUserApi) {
+    }
 }
 
 function handleFacetPayload(fq) {
