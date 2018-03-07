@@ -350,6 +350,7 @@ export class DatasetTableComponent implements OnInit, OnDestroy, AfterViewInit {
         filters['skip'] = index * size;
         filters['initial'] = false;
         filters['limit'] = size;
+        this.store.dispatch(new ua.SaveSettingsAction({'datasetCount': size}));
         if (event && event.active && event.direction) {
           filters['sortField'] = event.active + ' ' + event.direction;
         } else {
