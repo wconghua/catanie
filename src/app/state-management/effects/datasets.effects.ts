@@ -131,6 +131,7 @@ export class DatasetEffects {
         } else if (match.length === 1) {
           filter = match[0];
         }
+        // filter['include'] = [dl];
 
         return this.ds.count(filter)
           .switchMap(res => {
@@ -153,13 +154,17 @@ export class DatasetEffects {
         const filter = {};
         const dl = {'relation': 'datasetlifecycle'};
         if (fq['mode'].toLowerCase() === 'archive') {
-          dl['where'] = {'inq': config.archiveable};
+          dl['scope'] = {'where': {'archiveStatusMessage': 'datasetOnArchiveDisk'}};
+          filter['where'] = {'size': {'gt': 0}};
         } else if (fq['mode'].toLowerCase() === 'retrieve') {
-          dl['where'] = {'inq': config.retrieveable};
+          dl['scope'] = {'where': {'retrieveStatusMessage': {'inq': config.retrieveable}}};
+          filter['where'] = {'size': {'gt': 0}};
         }
         const match = handleFacetPayload(fq);
         if (match.length > 1) {
-          filter['where'] = {};
+          if (!('where' in filter)) {
+            filter['where'] = {};
+          }
 
           filter['where']['and'] = match;
         } else if (match.length === 1) {
@@ -172,6 +177,7 @@ export class DatasetEffects {
         if (fq['sortField']) {
           filter['order'] = fq['sortField'];
         }
+        console.log(filter);
         return this.ds.find(filter)
           .switchMap(res => {
             return Observable.of(new DatasetActions.SearchCompleteAction(res));
