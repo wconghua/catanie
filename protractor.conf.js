@@ -12,6 +12,7 @@ exports.config = {
     capabilities: {
         'browserName': 'chrome',
         // chromeDriver: '../node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.30',
+        'chrome-switches' : ["user-agent ='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/60.0.3112.113 Chrome/60.0.3112.113 Safari/537.36'"],
         chromeOptions: {
            args: ["--headless", "--disable-gpu", "--no-sandbox", "user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36"]
         //    args: ["--window-size=800x600"]
