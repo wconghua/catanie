@@ -12,6 +12,8 @@ interface LoginForm {
   rememberMe: boolean;
 }
 
+import { environment } from '../../../environments/environment';
+
 /**
  * Component to handle user login. Allows for AD and
  * functional account login.
@@ -23,6 +25,9 @@ export class LoginComponent implements OnInit {
 
   returnUrl: string;
   postError = '';
+  captchaPassed = false;
+  captchaKey;
+  show = false;
 
   loading$;
 
@@ -46,6 +51,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private store: Store<any>
   ) {
+    this.captchaKey = environment['captchaKey'];
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     this.loading$ = this.store.select(selectors.users.getLoading);
     this.store.select(selectors.users.getCurrentUser)
@@ -66,6 +72,13 @@ export class LoginComponent implements OnInit {
         this.store.dispatch(new ua.ShowMessageAction(msg));
       }
     });
+
+    
+
+    if (environment['captchaKey'] === '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') {
+      // development key: https://developers.google.com/recaptcha/docs/faq#id-like-to-run-automated-tests-with-recaptcha-v2-what-should-i-do
+      this.captchaPassed = true;
+    }
   }
 
   ngOnInit() {}
@@ -78,6 +91,17 @@ export class LoginComponent implements OnInit {
    */
   doADLogin(event) {
     const form: LoginForm = this.loginForm.value;
-    this.store.dispatch(new ua.LoginAction(form));
+    if (this.captchaPassed) {
+      this.store.dispatch(new ua.LoginAction(form));
+    } else {
+      const msg = new Message();
+      msg.content = 'Please complete captcha first';
+      msg.type = MessageType.Error;
+      this.store.dispatch(new ua.ShowMessageAction(msg));
+    }
+  }
+
+  handleCorrectCaptcha(event) {
+    this.captchaPassed = true;
   }
 }

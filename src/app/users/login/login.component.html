@@ -17,7 +17,9 @@
     <label>Remember Me?</label>
   </div>
   <br><br>
-
+  <ng-container *ngIf="!captchaPassed">
+    <re-captcha class='cap' (resolved)="handleCorrectCaptcha($event)" siteKey="{{captchaKey}}"></re-captcha>
+</ng-container>
   <button type="submit" [ngClass]="{'loading': loading$ | async}" class="ui button login-btn" id="login-btn">Log in</button>
 </form>
 </div>

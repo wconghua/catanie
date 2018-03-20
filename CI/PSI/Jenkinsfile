@@ -41,7 +41,7 @@ podTemplate(label: 'docker',
      sh './node_modules/@angular/cli/bin/ng e2e -e qa'
     }
     stage('build') {
-     sh "./node_modules/@angular/cli/bin/ng build --environment development -op dist/development"
+     sh "./node_modules/@angular/cli/bin/ng build --environment psi-test -op dist/development"
     }
    }
    container('docker') {

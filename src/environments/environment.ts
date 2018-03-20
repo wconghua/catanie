@@ -7,4 +7,5 @@ export const environment = {
   production: false,
   lbBaseURL: 'http://127.0.0.1:3000',
   externalAuthEndpoint: '/auth/msad',
+  captchaKey: '6LfAuU0UAAAAAB-JawogZmay26SlirCuKB5f34IX'
 };

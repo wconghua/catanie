@@ -9,12 +9,15 @@ import {ADAuthService} from './adauth.service';
 
 import {SharedCatanieModule} from 'shared/shared.module';
 
+import { RecaptchaModule } from 'ng-recaptcha';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     SharedCatanieModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RecaptchaModule.forRoot()
   ],
   declarations: [
     LoginComponent,

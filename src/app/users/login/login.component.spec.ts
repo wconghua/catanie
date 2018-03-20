@@ -7,6 +7,7 @@ import {LoopBackAuth} from 'shared/sdk/services';
 
 import {ADAuthService} from '../adauth.service';
 import {LoginComponent} from './login.component';
+import { RecaptchaModule } from 'ng-recaptcha';
 
 /* tslint:disable:no-unused-variable */
 describe('LoginComponent', () => {
@@ -30,7 +31,7 @@ describe('LoginComponent', () => {
     }
     });
     TestBed.configureTestingModule({
-      imports: [ ReactiveFormsModule, StoreModule.forRoot({}) ],
+      imports: [ ReactiveFormsModule, StoreModule.forRoot({}), RecaptchaModule.forRoot() ],
       declarations: [ LoginComponent ]
     });
     TestBed.compileComponents();

@@ -35,6 +35,7 @@
       "dmscprod": "environments/environment.dmscprod.ts",
       "maxiv-prod": "environments/environment.maxiv.prod.ts",
       "development": "environments/environment.development.ts",
+      "psi-test": "environments/environment.psi-test.ts",
       "production": "environments/environment.prod.ts",
       "staging": "environments/environment.staging.ts",
       "qa": "environments/environment.qa.ts",
