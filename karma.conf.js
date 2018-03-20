@@ -35,7 +35,7 @@ module.exports = function (config) {
     },
     angularCli: {
       config: './angular-cli.json',
-      environment: 'dev'
+      environment: 'psi-test'
     },
     customLaunchers: {
       ChromeHeadless: {
@@ -43,7 +43,8 @@ module.exports = function (config) {
         flags: [
           '--headless',
           '--disable-gpu',
-          '--no-sandbox',
+          '--no-sandbox',,
+          '--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36',
           // Without a remote debugging port, Google Chrome exits immediately.
           '--remote-debugging-port=9222'
         ]

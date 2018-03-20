@@ -73,8 +73,6 @@ export class LoginComponent implements OnInit {
       }
     });
 
-    
-
     if (environment['captchaKey'] === '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') {
       // development key: https://developers.google.com/recaptcha/docs/faq#id-like-to-run-automated-tests-with-recaptcha-v2-what-should-i-do
       this.captchaPassed = true;
