@@ -1,5 +1,10 @@
-import {Observable} from 'rxjs/Rx';
-import {Subject} from 'rxjs/Subject';
+import { Observable, Subject } from 'rxjs';
+import { LoopBackFilter, Dataset } from './sdk';
+
+import { Proposal } from './sdk/models/Proposal';
+import { ProposalApi } from './sdk/services/custom/Proposal';
+
+import * as applyFilter from 'loopback-filters';
 
 export class MockUserApi {
   getCurrentId() { return 123; }
@@ -12,14 +17,44 @@ export class MockUserApi {
   }
 
 export class MockDatasetApi {
-  getDatasets() { return Observable.from([]); }
+  private datasets: Dataset[] = [
+    new Dataset({
+      pid: 'pid-1',
+      proposalId: 'proposal-1',
+      owner: '',
+      contactEmail: '',
+      sourceFolder: '',
+      creationTime: new Date(),
+      type: '',
+      ownerGroup: '',
+    }),
+    new Dataset({
+      pid: 'pid-2',
+      proposalId: 'proposal-2',
+      owner: '',
+      contactEmail: '',
+      sourceFolder: '',
+      creationTime: new Date(),
+      type: '',
+      ownerGroup: '',
+    }),
+    new Dataset({
+      pid: 'pid-3',
+      proposalId: 'proposal-3',
+      owner: '',
+      contactEmail: '',
+      sourceFolder: '',
+      creationTime: new Date(),
+      type: '',
+      ownerGroup: '',
+    }),
+  ];
 
-  getDatablocks() { return Observable.from([]); }
-
-  find() { return Observable.from([]); }
-
-  findById() { return Observable.from([]); }
+  find(filter: any = {}) {
+    const found = applyFilter(this.datasets, filter);
+    return Observable.of(found);
   }
+}
 
 export class MockMatDialogRef {
 
@@ -95,10 +130,29 @@ export class MockDatasetService {
   }
 
 export class MockProposalApi {
+  private proposals: Proposal[] = [
+    new Proposal({
+      proposalId: 'proposal-1',
+      email: 'test1@test.com',
+      ownerGroup: null,
+    }),
+    new Proposal({
+      proposalId: 'proposal-2',
+      email: 'test2@test.com',
+      ownerGroup: null,
+    }),
+    new Proposal({
+      proposalId: 'proposal-3',
+      email: 'test3@test.com',
+      ownerGroup: null,
+    }),
+  ];
 
-  // TODO hold datasets and return array of samples
-  find(filter?: any) { return Observable.from([]); }
+  find(filter: any = {}): Observable<Proposal[]> {
+    const found = applyFilter(this.proposals, filter);
+    return Observable.of(this.proposals);
   }
+}
 
 export class MockUserMsgService {
 
