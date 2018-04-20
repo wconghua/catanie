@@ -1,5 +1,6 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { ProposalsState } from '../state/proposals.store';
+import * as lb from "../../shared/sdk/models";
 //import { getDatasets } from './datasets.selectors';
 
 const getProposalsState = createFeatureSelector<ProposalsState>('proposals');
@@ -45,3 +46,6 @@ export const getSelectedProposalDatasets = createSelector(
 	getSelectedProposalId,
 	(datasets, proposalId) => datasets.filter(dataset => dataset.proposalId === proposalId)
 );
+
+export const getProps = (state: any) => state.listp;
+

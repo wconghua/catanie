@@ -6,3 +6,5 @@ import * as users from './users.selectors';
 export {users};
 import * as ui from './ui.selectors';
 export {ui};
+import * as proposals from './proposals.selectors';
+export {proposals};

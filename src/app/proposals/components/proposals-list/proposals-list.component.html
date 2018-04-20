@@ -10,3 +10,22 @@
 <div *ngIf="proposals && proposals.length === 0">
   {{ hasFetched ? "No proposals." : "Loading..." }}
 </div>
+<div>
+  Starting table div...
+  <div>
+<mat-table #table [dataSource]="dataSource" class='dataset-table'>
+  <ng-container *ngFor="let col of cols">
+    <ng-container matColumnDef="{{col.field}}">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{col.header}} </mat-header-cell>
+
+      <mat-cell *matCellDef="let row"> {{getRowValue(row, col)}} </mat-cell>
+    </ng-container>
+  </ng-container>
+
+
+  <mat-header-row class='datasets-header' *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row class='row-generic' *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+  </div>
+  Ending table div...
+</div>

@@ -10,6 +10,7 @@ import {
 } from '../actions/proposals.actions';
 
 import { LogoutCompleteAction, LOGOUT_COMPLETE } from '../actions/user.actions';
+import {getSelectedProposalId} from "../selectors/proposals.selectors";
 
 export function proposalsReducer(
     state: ProposalsState = initialProposalsState,
@@ -22,10 +23,11 @@ export function proposalsReducer(
 
         case FETCH_PROPOSALS_COMPLETE: {
             const list = (action as FetchProposalsCompleteAction).proposals;
+            const listp = list;
             const proposals = list.reduce((proposals, proposal) =>
                 ({...proposals, [proposal.proposalId]: proposal})
             , {});
-            return {...state, proposals, hasFetched: true};
+            return {...state, proposals, listp, hasFetched: true};
         }
         case FETCH_PROPOSAL_COMPLETE: {
             const proposal = (action as FetchProposalCompleteAction).proposal;
@@ -34,14 +36,14 @@ export function proposalsReducer(
         }
         case FETCH_DATASETS_FOR_PROPOSAL_COMPLETE: {
             const list = (action as FetchDatasetsForProposalCompleteAction).datasets;
-            const datasets = list.reduce((datasets, dataset) => 
+            const datasets = list.reduce((datasets, dataset) =>
                 ({...datasets, [dataset.pid]: dataset})
             , {});
             return {...state, datasets};
         }
         case LOGOUT_COMPLETE:
             return {...initialProposalsState};
-            
+
         default:
             return state;
     }
