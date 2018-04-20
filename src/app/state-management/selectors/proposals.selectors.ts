@@ -47,5 +47,3 @@ export const getSelectedProposalDatasets = createSelector(
 	(datasets, proposalId) => datasets.filter(dataset => dataset.proposalId === proposalId)
 );
 
-export const getProps = (state: any) => state.listp;
-
