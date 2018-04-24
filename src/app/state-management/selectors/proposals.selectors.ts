@@ -47,3 +47,15 @@ export const getSelectedProposalDatasets = createSelector(
 	(datasets, proposalId) => datasets.filter(dataset => dataset.proposalId === proposalId)
 );
 
+export const getTotalProposals = (state: any) => state.totalProposals;
+
+const getFilteredProposals = createSelector(
+  getProposals,
+  proposals => Object.keys(proposals).map(id => proposals[id])
+);
+
+export const getFilteredProposalList = createSelector(
+  getFilteredProposals,
+  proposals => Object.keys(proposals).map(id => proposals[id])
+);
+

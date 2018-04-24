@@ -6,7 +6,8 @@ export interface ProposalsState {
 	datasets: {[datasetId: string]: Dataset};
 	hasFetched: boolean,
 	selectedId: string,
-  listp: lb.Proposal[];
+  totalProposals: number;
+  proposalCount: number;
 };
 
 export const initialProposalsState: ProposalsState = {
@@ -14,5 +15,6 @@ export const initialProposalsState: ProposalsState = {
 	datasets: {},
 	hasFetched: false,
 	selectedId: null,
-  listp: [],
+  totalProposals: 0,
+  proposalCount: 1000,
 };

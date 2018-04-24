@@ -22,6 +22,7 @@ import {
   MatTableModule,
   MatTabsModule,
   MatCardModule,
+  MatPaginatorModule,
 } from '@angular/material';
 
 @NgModule({
@@ -36,6 +37,7 @@ import {
         MatCardModule,
         MatTabsModule,
         MatTableModule,
+        MatPaginatorModule,
     ],
     declarations: [
         ListProposalsPageComponent,

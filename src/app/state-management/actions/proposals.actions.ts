@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Proposal, Dataset } from '../models';
+import {FILTER_UPDATE, SEARCH_COMPLETE} from "./datasets.actions";
 
 export const SELECT_PROPOSAL			= '[Proposals] Select Proposal';
 
@@ -14,6 +15,8 @@ export const FETCH_PROPOSAL_FAILED      = '[Proposals] Get Proposal Failed';
 export const FETCH_DATASETS_FOR_PROPOSAL            = '[Proposals] Fetch Datasets for Proposal';
 export const FETCH_DATASETS_FOR_PROPOSAL_COMPLETE   = '[Proposals] Fetch Datasets for Proposal Complete';
 export const FETCH_DATASETS_FOR_PROPOSAL_FAILED     = '[Proposals] Fetch Datasets for Proposal Failed';
+export const FILTER_PROPOSALS_UPDATE =                '[Proposals] Filter Update';
+export const SEARCH_PROPOSALS_COMPLETE =                '[Proposals] Search Proposals Complete';
 
 export class SelectProposalAction implements Action {
     type = SELECT_PROPOSAL;
@@ -61,10 +64,20 @@ export class FetchDatasetsForProposalFailedAction implements Action {
     type = FETCH_DATASETS_FOR_PROPOSAL_FAILED;
 }
 
+export class UpdateProposalFilterAction implements Action {
+  readonly type = FILTER_PROPOSALS_UPDATE;
+  constructor(public payload: any) {}
+}
+
+export class SearchProposalCompleteAction implements Action {
+  readonly type = SEARCH_PROPOSALS_COMPLETE;
+  constructor(public payload: {}[]) {}
+}
+
 export type FetchProposalsOutcomeAction =
 	FetchProposalsCompleteAction |
     FetchProposalsFailedAction;
-    
+
 export type FetchProposalOutcomeAction =
     FetchProposalCompleteAction |
     FetchProposalFailedAction;
@@ -73,8 +86,9 @@ export type FetchDatasetsForProposalOutcomeAction =
     FetchDatasetsForProposalCompleteAction |
     FetchDatasetsForProposalFailedAction;
 
-export type ProposalsAction = 
+export type ProposalsAction =
     SelectProposalAction |
     FetchProposalsAction | FetchProposalsOutcomeAction |
     FetchProposalAction | FetchProposalOutcomeAction |
-    FetchDatasetsForProposalAction | FetchDatasetsForProposalOutcomeAction;
+    FetchDatasetsForProposalAction | FetchDatasetsForProposalOutcomeAction |
+    SearchProposalCompleteAction | UpdateProposalFilterAction;
