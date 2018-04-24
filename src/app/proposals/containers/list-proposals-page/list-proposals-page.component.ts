@@ -23,7 +23,7 @@ import { ProposalsService } from '../../proposals.service';
 @Component({
     selector: 'list-proposals-page',
     template: `
-        <proposals-list [proposals]="proposals$ | async" [dataSource]="dataSource" [proposalsCount]="proposalsCount$" [limit]="limit" [limit2]="limit2$ | async">
+        <proposals-list [proposals]="proposals$ | async" [dataSource]="dataSource" [proposalsCount]="proposalsCount$" [limit]="limit">
         </proposals-list>
     `
 })
@@ -32,7 +32,6 @@ export class ListProposalsPageComponent implements OnInit, OnDestroy, AfterViewI
     private proposals$: Observable<Proposal[]>;
     private hasFetched$: Observable<boolean>;
     limit: any = 10;
-    limit2$: any = 10;
 
     propos = [];
     proposalsCount$;
@@ -50,7 +49,7 @@ export class ListProposalsPageComponent implements OnInit, OnDestroy, AfterViewI
         //this.proposals$ = this.store.pipe(select(getProposalList));
 
       this.limit = this.proposalService.limit;
-      this.limit2$ = this.store.select(state => state.proposals.proposalCount);
+      //this.limit2$ = this.store.select(state => state.proposals.proposalCount);
       const filters = Object.assign({});
       filters['limit'] = this.limit;
 

@@ -7,7 +7,6 @@ export interface ProposalsState {
 	hasFetched: boolean,
 	selectedId: string,
   totalProposals: number;
-  proposalCount: number;
 };
 
 export const initialProposalsState: ProposalsState = {
@@ -16,5 +15,4 @@ export const initialProposalsState: ProposalsState = {
 	hasFetched: false,
 	selectedId: null,
   totalProposals: 0,
-  proposalCount: 1000,
 };

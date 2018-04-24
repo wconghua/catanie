@@ -21,7 +21,6 @@ export class ProposalsListComponent {
     @Input() proposalsCount;
     @Input() dataSource;
     @Input() limit;
-    @Input() limit2;
     //dataSource: MatTableDataSource<any> | null;
     //@Input() paginator;
   @ViewChild(MatPaginator) paginator: MatPaginator;
