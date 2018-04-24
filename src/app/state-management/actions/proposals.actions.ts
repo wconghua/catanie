@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Proposal, Dataset } from '../models';
-import {FILTER_UPDATE, SEARCH_COMPLETE} from "./datasets.actions";
+import {FILTER_UPDATE, SEARCH_COMPLETE, TOTAL_UPDATE} from "./datasets.actions";
 
 export const SELECT_PROPOSAL			= '[Proposals] Select Proposal';
 
@@ -17,6 +17,8 @@ export const FETCH_DATASETS_FOR_PROPOSAL_COMPLETE   = '[Proposals] Fetch Dataset
 export const FETCH_DATASETS_FOR_PROPOSAL_FAILED     = '[Proposals] Fetch Datasets for Proposal Failed';
 export const FILTER_PROPOSALS_UPDATE =                '[Proposals] Filter Update';
 export const SEARCH_PROPOSALS_COMPLETE =                '[Proposals] Search Proposals Complete';
+
+export const TOTAL_PROPOSALS_UPDATE =    '[Proposals] Total Proposals Update';
 
 export class SelectProposalAction implements Action {
     type = SELECT_PROPOSAL;
@@ -74,6 +76,12 @@ export class SearchProposalCompleteAction implements Action {
   constructor(public payload: {}[]) {}
 }
 
+export class TotalProposalsAction implements Action {
+  readonly type = TOTAL_PROPOSALS_UPDATE;
+  constructor(public payload: number) {}
+}
+
+
 export type FetchProposalsOutcomeAction =
 	FetchProposalsCompleteAction |
     FetchProposalsFailedAction;
@@ -91,4 +99,4 @@ export type ProposalsAction =
     FetchProposalsAction | FetchProposalsOutcomeAction |
     FetchProposalAction | FetchProposalOutcomeAction |
     FetchDatasetsForProposalAction | FetchDatasetsForProposalOutcomeAction |
-    SearchProposalCompleteAction | UpdateProposalFilterAction;
+    SearchProposalCompleteAction | UpdateProposalFilterAction |TotalProposalsAction;

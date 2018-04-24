@@ -18,7 +18,12 @@
     <mat-row class='row-generic' (click)="onRowSelect($event, row)" *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
 </div>
-  <div>Table datasoiurce...
+</mat-nav-list>
+  <div *ngIf="proposals && proposals.length === 0">
+    {{ hasFetched ? "No proposals." : "Loading..." }}
+  </div>
+<h2>Table datasource...</h2>
+  <div>
   <mat-table #table [dataSource]="dataSource" class='dataset-table'>
       <ng-container matColumnDef="proposalId">
         <mat-header-cell *matHeaderCellDef>Proposal ID</mat-header-cell>
@@ -37,8 +42,6 @@
     </mat-table>
   </div>
 
-  <mat-paginator class='dataset-paginator' [pageSize]="limit$ | async" [pageSizeOptions]="[10,30, 50, 100]" [length]="proposalsCount" (page)="onPage($event)"></mat-paginator>
+  <mat-paginator class='dataset-paginator' [pageSize]="limit2" [pageSizeOptions]="[10,30, 50, 100]" [length]="proposalsCount" (page)="onPage($event)"></mat-paginator>
   <!--<mat-paginator class='dataset-paginator' [pageSize]="limit$ | async" [pageSizeOptions]="[10,30, 50, 100]" [length]="proposalsCount$ | async" (page)="onPage($event)"></mat-paginator>-->
-<div *ngIf="proposals && proposals.length === 0">
-  {{ hasFetched ? "No proposals." : "Loading..." }}
-</div>
+

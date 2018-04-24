@@ -7,6 +7,7 @@ import {Store} from "@ngrx/store";
 import * as selectors from "../../../state-management/selectors";
 import * as dsa from "../../../state-management/actions/proposals.actions";
 import {UpdateProposalFilterAction} from "../../../state-management/actions/proposals.actions";
+import {AfterViewInit} from "@angular/core/src/metadata/lifecycle_hooks";
 
 @Component({
     selector: 'proposals-list',
@@ -19,8 +20,11 @@ export class ProposalsListComponent {
     private displayedColumns: string[] = ['proposalId','title', 'abstract'];
     @Input() proposalsCount;
     @Input() dataSource;
+    @Input() limit;
+    @Input() limit2;
     //dataSource: MatTableDataSource<any> | null;
-    @ViewChild(MatPaginator) paginator: MatPaginator;
+    //@Input() paginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
     constructor(
       private router: Router,
       private store: Store<AppState>,
@@ -39,22 +43,16 @@ export class ProposalsListComponent {
     );
   }
 
-  ngAfterViewInit() {
-    //this.dataSource$.paginator = this.paginator;
-    this.dataSource.paginator = this.paginator;
-    /*if (this.dataSource) {
-      this.dataSource.paginator = this.paginator;
-      //this.dataSource.sort = this.sort;
-    }*/
-
-  }
-
   /**
    * Retrieves all datasets each time a new page
    * is selected in the table
    * @param event
    */
   onPage(event) {
+    const filters = {};
+    filters['limit'] = event['pageSize'];
+    //this.proposals = this.proposalService.getFilteredProposals(filters);
+
     const index = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     this.store
@@ -74,7 +72,5 @@ export class ProposalsListComponent {
         // }
       });
   }
-
-
 
 }

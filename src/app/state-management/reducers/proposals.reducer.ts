@@ -26,7 +26,7 @@ export function proposalsReducer(
             const proposals = list.reduce((proposals, proposal) =>
                 ({...proposals, [proposal.proposalId]: proposal})
             , {});
-            return {...state, proposals, hasFetched: true};
+            return {...state, proposals, hasFetched: true, totalProposals: list.length};
         }
         case FETCH_PROPOSAL_COMPLETE: {
             const proposal = (action as FetchProposalCompleteAction).proposal;

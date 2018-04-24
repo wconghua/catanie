@@ -7,7 +7,7 @@ import {Subject} from "rxjs/Subject";
 
 @Injectable()
 export class ProposalsService {
-  limit = 1000;
+  limit = 30;
   loading = false;
   proposals: Array<Proposal> = [];
   proposalChange: Subject<string> = new Subject<string>();
@@ -34,7 +34,7 @@ export class ProposalsService {
 	}
 
   getFilteredProposals(terms: object = this.filter): Observable<Proposal[]> {
-    const filter = Object.assign(terms, this.filter);
+    const filter = Object.assign(this.filter, terms);
     return this.proposalApi.find(filter);
   }
 

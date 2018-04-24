@@ -23,7 +23,7 @@ import { ProposalsService } from '../../proposals.service';
 @Component({
     selector: 'list-proposals-page',
     template: `
-        <proposals-list [proposals]="proposals$ | async" [dataSource]="dataSource" [proposalsCount]="proposalsCount$ | async">
+        <proposals-list [proposals]="proposals$ | async" [dataSource]="dataSource" [proposalsCount]="proposalsCount$" [limit]="limit" [limit2]="limit2$ | async">
         </proposals-list>
     `
 })
@@ -31,42 +31,78 @@ export class ListProposalsPageComponent implements OnInit, OnDestroy, AfterViewI
     private subscription: Subscription;
     private proposals$: Observable<Proposal[]>;
     private hasFetched$: Observable<boolean>;
-    //private datasource$: Observable<Proposal[]>;
-    limit$: any = 10;
+    limit: any = 10;
+    limit2$: any = 10;
 
-    @Input() propos = [];
+    propos = [];
     proposalsCount$;
     dataSource: MatTableDataSource <Proposal> | null;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
+
     constructor(
       private store: Store<AppState>,
       private router: Router,
-      private proposalService: ProposalsService,
-    )
-    {
-      this.proposalsCount$ = this.store.select(selectors.proposals.getTotalProposals);
-    }
-
+      private proposalService: ProposalsService
+    ){}
 
     ngOnInit() {
-        this.proposals$ = this.store.pipe(select(getProposalList));
-      //this.proposalService.limit = 1000;
-      //this.limit$ = this.store.select(state => state.proposals.proposalCount);
-      this.limit$ = this.proposalService.limit
+        //this.proposals$ = this.store.pipe(select(getProposalList));
 
-        //this.proposals$ = this.proposalService.getFilteredProposals(this.limit$);
-        this.proposalService.getFilteredProposals(this.limit$).subscribe(
+      this.limit = this.proposalService.limit;
+      this.limit2$ = this.store.select(state => state.proposals.proposalCount);
+      const filters = Object.assign({});
+      filters['limit'] = this.limit;
+
+      this.proposalsCount$ = this.store.select(selectors.proposals.getTotalProposals);
+      this.proposals$ = this.proposalService.getFilteredProposals(filters);
+      //this.proposalsCount$ = this.store.select(selectors.proposals.getTotalProposals);
+      //let count = this.store.select(selectors.proposals.getTotalProposals);
+      /*this.proposals$.subscribe(
+        data => {
+          if (!data) return;
+          this.propos = data;
+          this.dataSource = new MatTableDataSource(this.propos);
+          setTimeout(() => this.dataSource.paginator = this.paginator);
+        },
+        error => {
+          console.error(error);
+        }
+      );*/
+
+        this.store.select(selectors.proposals.getProposalList).subscribe(
           data => {
-            if (!data) return;
             this.propos = data;
             this.dataSource = new MatTableDataSource(this.propos);
-
+            //this.dataSource.sort = this.sort;
           },
-            error => {
-          console.error(error);
+          error => {
+            console.error(error);
           }
         );
+      /*this.proposalService.getFilteredProposals(this.limit).subscribe(
+        data => {
+          if (!data) return;
+          this.propos = data;
+          this.dataSource = new MatTableDataSource(this.propos);
+        },
+        error => {
+          console.error(error);
+        }
+      );*/
+
+
+      this.proposalService.getProposals().subscribe(
+        data => {
+          if (!data) return;
+          if (data.length > 0){
+            this.proposalsCount$ = data.length;
+          }
+        },
+        error => {
+          console.error(error);
+        }
+      );
         //this.dataSource = new MatTableDataSource(this.proposalService.getFilteredProposals(this.limit$));
         /*this.store.pipe(select(getFilteredProposalList)).subscribe(
           data => {
@@ -93,13 +129,10 @@ export class ListProposalsPageComponent implements OnInit, OnDestroy, AfterViewI
     }
 
   ngAfterViewInit() {
-      //this.dataSource$.paginator = this.paginator;
-    this.dataSource.paginator = this.paginator;
-    /*if (this.dataSource) {
+      if (this.dataSource) {
       this.dataSource.paginator = this.paginator;
       //this.dataSource.sort = this.sort;
-    }*/
-
+    }
   }
 
   /**
