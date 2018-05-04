@@ -29,3 +29,14 @@ export interface DatasetFilters {
   initial: boolean;
   keywords: string[];
 };
+
+export interface ProposalFilters {
+  text: string;
+  ownerGroup: string[];
+  type: string;
+  creationTime: {'start': Date, 'end': Date};
+  creationLocation: string[];
+  skip: number;
+  initial: boolean;
+  keywords: string[];
+};

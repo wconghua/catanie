@@ -1,0 +1,20 @@
+<div>
+  <div class="example-container mat-elevation-z8">
+    <div class="ui segment" *ngIf="loading$ | async">
+      <p></p>
+      <div class="ui active inverted dimmer">
+        <div class="ui loader"></div>
+      </div>
+    </div>
+  </div>
+  <!--<proposals-filter></proposals-filter>-->
+  <proposal-table-pure
+    [proposals]="proposals$ | async"
+    [totalNumber]="proposalCount$ | async"
+    [currentPage]="currentPage$ | async"
+    [rowClassifier]="rowClassifier"
+    (onClick)="onClick($event)"
+    (onPageChange)="onPageChange($event)"
+    (onSortChange)="onSortChange($event)">
+  </proposal-table-pure>
+</div>

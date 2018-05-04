@@ -10,6 +10,9 @@ import { ProposalDetailComponent } from './components/proposal-detail/proposal-d
 
 import { ListProposalsPageComponent } from './containers/list-proposals-page/list-proposals-page.component';
 import { ViewProposalPageComponent } from './containers/view-proposal-page/view-proposal-page.component';
+//import {ProposalsFilterComponent} from './components/proposals-filter/proposals-filter.component';
+
+import {ProposalTableComponent} from '../proposals/proposal-table/proposal-table.component';
 
 import { ProposalsService } from './proposals.service';
 import { DatasetService } from '../datasets/dataset.service';
@@ -24,6 +27,7 @@ import {
   MatCardModule,
   MatPaginatorModule,
 } from '@angular/material';
+import {ProposalTablePureComponent} from "./proposal-table-pure/proposal-table-pure.component";
 
 @NgModule({
     imports: [
@@ -43,8 +47,11 @@ import {
         ListProposalsPageComponent,
         ViewProposalPageComponent,
 
+        ProposalTableComponent,
+        ProposalTablePureComponent,
         ProposalsListComponent,
         ProposalDetailComponent,
+      //ProposalsFilterComponent,
     ],
     providers: [
         ProposalsService,

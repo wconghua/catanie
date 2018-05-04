@@ -1,18 +1,31 @@
-import { Proposal, Dataset } from '../models';
-import * as lb from "../../shared/sdk/models";
+import {Proposal, Dataset, ProposalFilters} from '../models';
 
 export interface ProposalsState {
-	proposals: {[proposalId: string]: Proposal};
+  proposals: Proposal[];
 	datasets: {[datasetId: string]: Dataset};
+  activeFilters: ProposalFilters;
+  filterValues: object;
 	hasFetched: boolean,
 	selectedId: string,
   totalProposals: number;
+  loading: boolean;
+  currentPage3: number;
+  itemsPerPage3: number;
+
 };
 
 export const initialProposalsState: ProposalsState = {
-	proposals: {},
+  proposals: [],
 	datasets: {},
+  activeFilters: <ProposalFilters>{ text: null, creationTime: null, type: null,
+    creationLocation: [], ownerGroup: [], skip: 0, initial: true, sortField: 'createdAt desc', keywords: []},
+  filterValues: {creationTime: {start: null, end: null}, creationLocation: [], ownerGroup: [], text: null, type: null, keywords: []},
 	hasFetched: false,
 	selectedId: null,
   totalProposals: 0,
+  loading: false,
+  currentPage3: 0,
+  itemsPerPage3: 30
 };
+
+

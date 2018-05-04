@@ -1,28 +1,4 @@
 
-<mat-nav-list *ngIf="proposals && proposals.length > 0">
-<div>
-  <mat-table #table [dataSource]="proposals" class='dataset-table'>
-    <ng-container matColumnDef="proposalId">
-      <mat-header-cell *matHeaderCellDef>Proposal ID</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{element.proposalId}}</mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="title">
-      <mat-header-cell *matHeaderCellDef>Title</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{element.title}}</mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="abstract">
-      <mat-header-cell *matHeaderCellDef>Abstract</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{element.abstract}}</mat-cell>
-    </ng-container>
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row class='row-generic' (click)="onRowSelect($event, row)" *matRowDef="let row; columns: displayedColumns;"></mat-row>
-  </mat-table>
-</div>
-</mat-nav-list>
-  <div *ngIf="proposals && proposals.length === 0">
-    {{ hasFetched ? "No proposals." : "Loading..." }}
-  </div>
-<h2>Table datasource...</h2>
   <div>
   <mat-table #table [dataSource]="dataSource" class='dataset-table'>
       <ng-container matColumnDef="proposalId">

@@ -1,11 +1,11 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { ProposalsState } from '../state/proposals.store';
 import * as lb from "../../shared/sdk/models";
-//import { getDatasets } from './datasets.selectors';
+
 
 const getProposalsState = createFeatureSelector<ProposalsState>('proposals');
 
-const getProposals = createSelector(
+export const getProposals = createSelector(
 	getProposalsState,
 	state => state.proposals
 );
@@ -58,4 +58,25 @@ export const getFilteredProposalList = createSelector(
   getFilteredProposals,
   proposals => Object.keys(proposals).map(id => proposals[id])
 );
+
+// Hannes code
+const getProposalState = createFeatureSelector<ProposalsState>('proposals');
+
+export const getProposals2 = createSelector(
+  getProposalState,
+  state => state.proposals
+);
+
+export const getPage = createSelector(
+  getProposalState,
+  state => state.currentPage3
+);
+
+export const getLoading = (state: any) => state.proposals.loading;
+export const getTotalSets = (state: any) => state.proposals.totalProposals;
+export const getFilterValues = (state: any) => state.proposals.filterValues;
+export const getActiveFilters = (state: any) => state.proposals.activeFilters;
+
+export const getText = (state: any) => state.proposals.activeFilters.text;
+
 

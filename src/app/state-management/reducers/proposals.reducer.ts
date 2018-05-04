@@ -7,10 +7,12 @@ import {
     FetchProposalsCompleteAction, FETCH_PROPOSALS_COMPLETE,
     FetchProposalCompleteAction, FETCH_PROPOSAL_COMPLETE,
     FetchDatasetsForProposalCompleteAction, FETCH_DATASETS_FOR_PROPOSAL_COMPLETE,
+    FILTER_PROPOSALS_UPDATE, FILTER_PROPOSALS_VALUE_UPDATE, FILTER_PROPOSALS_UPDATE_COMPLETE, TOTAL_PROPOSALS_UPDATE
 } from '../actions/proposals.actions';
 
 import { LogoutCompleteAction, LOGOUT_COMPLETE } from '../actions/user.actions';
 import {getSelectedProposalId} from "../selectors/proposals.selectors";
+import {FILTER_UPDATE, FILTER_UPDATE_COMPLETE, FILTER_VALUE_UPDATE, TOTAL_UPDATE} from "../actions/datasets.actions";
 
 export function proposalsReducer(
     state: ProposalsState = initialProposalsState,
@@ -22,11 +24,8 @@ export function proposalsReducer(
             return {...state, selectedId};
 
         case FETCH_PROPOSALS_COMPLETE: {
-            const list = (action as FetchProposalsCompleteAction).proposals;
-            const proposals = list.reduce((proposals, proposal) =>
-                ({...proposals, [proposal.proposalId]: proposal})
-            , {});
-            return {...state, proposals, hasFetched: true, totalProposals: list.length};
+            const proposals = (action as FetchProposalsCompleteAction).proposals;
+            return {...state, proposals, hasFetched: true, totalProposals: proposals.length};
         }
         case FETCH_PROPOSAL_COMPLETE: {
             const proposal = (action as FetchProposalCompleteAction).proposal;
@@ -39,6 +38,23 @@ export function proposalsReducer(
                 ({...datasets, [dataset.pid]: dataset})
             , {});
             return {...state, datasets};
+        }
+        case FILTER_PROPOSALS_UPDATE: {
+          const f = action['payload'];
+          const group = f['ownerGroup'];
+          if (group && !Array.isArray(group) && group.length > 0) {
+            f['ownerGroup'] = [group];
+          }
+          return {...state, activeFilters: f, };
+        }
+        case FILTER_PROPOSALS_VALUE_UPDATE:
+        case FILTER_PROPOSALS_UPDATE_COMPLETE: {
+          const filterValues = action['payload'];
+          return {...state, filterValues};
+        }
+        case TOTAL_PROPOSALS_UPDATE: {
+          const totalProposals = <number>action['payload'];
+          return {...state, totalProposals};
         }
         case LOGOUT_COMPLETE:
             return {...initialProposalsState};

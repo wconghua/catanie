@@ -23,7 +23,8 @@ import {
   FetchDatasetsForProposalCompleteAction,
   FetchDatasetsForProposalFailedAction,
   UpdateProposalFilterAction, FILTER_PROPOSALS_UPDATE, SearchProposalCompleteAction,
-  TotalProposalsAction, TOTAL_PROPOSALS_UPDATE
+  TotalProposalsAction, TOTAL_PROPOSALS_UPDATE, ProposalsAction,
+  SearchProposalsFailedAction
 } from '../actions/proposals.actions';
 
 import { Proposal } from '../models';
@@ -42,7 +43,7 @@ export class ProposalsEffects {
 		)
 	);
 
-  /*@Effect() getProposalsCount$: Observable<FetchProposalsOutcomeAction> = this.actions$.pipe(
+  @Effect() getProposalsCount$: Observable<FetchProposalsOutcomeAction> = this.actions$.pipe(
     ofType<FetchProposalsAction>(FETCH_PROPOSALS),
     mergeMap(action =>
       this.proposalsService.getProposals().pipe(
@@ -50,7 +51,7 @@ export class ProposalsEffects {
         catchError(() => Observable.of(new FetchProposalsFailedAction()))
       )
     )
-  );*/
+  );
 
   /*@Effect() getFilteredProposals$: Observable<FetchProposalsOutcomeAction> = this.actions$.pipe(
     ofType<FetchProposalsAction>(FETCH_PROPOSALS),
@@ -83,9 +84,70 @@ export class ProposalsEffects {
             });
         }
       );*/
+  @Effect()
+  protected facetProposalCount$: Observable<Action> =
+    this.actions$.ofType(FILTER_PROPOSALS_UPDATE)
+      .debounceTime(300)
+      .map((action: DatasetActions.UpdateFilterAction) => action.payload)
+      .switchMap(payload => {
+        const fq = Object.assign({}, payload);
+        const match = handleFacetPayload(fq, true);
+        let filter = {};
+        if (match.length > 1) {
+          filter = {};
+          filter['and'] = match;
+        } else if (match.length === 1) {
+          filter = match[0];
+        }
+
+        return this.ps.count(filter)
+          .switchMap(res => {
+            return Observable.of(new TotalProposalsAction(res['count']));
+          })
+          .catch(err => {
+            console.log(err);
+            return Observable.of(new SearchProposalsFailedAction(err));
+          });
+
+      });
 
   @Effect()
-protected getProposalsCount$: Observable<Action> =
+  protected facetProposals$: Observable<Action> =
+    this.actions$.ofType(FILTER_PROPOSALS_UPDATE)
+      .debounceTime(300)
+      .map((action: UpdateProposalFilterAction) => action.payload)
+      .switchMap(payload => {
+        const fq = Object.assign({}, payload);
+        const match = handleFacetPayload(fq, true);
+        const filter = {};
+        if (match.length > 1) {
+          filter['where'] = {};
+
+          filter['where']['and'] = match;
+        } else if (match.length === 1) {
+          filter['where'] = match[0];
+        }
+
+        filter['limit'] = fq['limit'] ? fq['limit'] : 30;
+        filter['skip'] = fq['skip'] ? fq['skip'] : 0;
+        filter['include'] = [{ relation: 'datasetlifecycle' }];
+        if (fq['sortField']) {
+          filter['order'] = fq['sortField'];
+        }
+        return this.ps.find(filter)
+          .switchMap(res => {
+            console.log(res);
+            return Observable.of(new SearchProposalCompleteAction(res));
+          })
+          .catch(err => {
+            console.log(err);
+            return Observable.of(new SearchProposalsFailedAction(err));
+          });
+      });
+
+
+  /*@Effect()
+  protected getProposalsCount$: Observable<Action> =
   this.actions$.ofType(FILTER_PROPOSALS_UPDATE)
     .map((action: UpdateProposalFilterAction) => action.payload)
     .switchMap(payload => {
@@ -103,7 +165,7 @@ protected getProposalsCount$: Observable<Action> =
           });
       }
     );
-
+*/
 	@Effect() getProposal$: Observable<FetchProposalOutcomeAction> = this.actions$.pipe(
 		ofType<FetchProposalAction>(FETCH_PROPOSAL),
 		mergeMap(action =>
@@ -124,9 +186,103 @@ protected getProposalsCount$: Observable<Action> =
 		)
 	);
 
+
 	constructor(
 		private actions$: Actions,
 		private proposalsService: ProposalsService,
     private ps: lb.ProposalApi
 	) {}
 }
+
+/**
+ * Create a filter query to be handled by loopback for datasets and facets
+ * @param fq The fields to construct the query from
+ * @param loopback If using Loopback or mongo syntax. Check the docs for differences but mainly on array vs object structure
+ */
+function handleFacetPayload(fq, loopback = false) {
+  const match: any = loopback ? [] : {};
+  const f = Object.assign({}, fq);
+  delete f['initial'];
+  delete f['sortField'];
+  delete f['skip'];
+
+  Object.keys(f).forEach(key => {
+    let facet = f[key];
+    if (facet) {
+      switch (key) {
+        case 'ownerGroup':
+          if (facet.length > 0 && facet.constructor !== Array &&
+            typeof facet[0] === 'object') {
+            const groupsArray = [];
+            const keys = Object.keys(facet[0]);
+
+            for (let i = 0; i < keys.length; i++) {
+              groupsArray.push(facet[0][keys[i]]);
+            }
+
+            facet = groupsArray;
+          }
+          if (facet.length > 0) {
+            if (loopback) {
+              match.push({ownerGroup: {inq: facet}});
+            } else {
+              match[key] = {$in: facet};
+            }
+          }
+          break;
+        case 'text':
+          if (loopback) {
+            match.push({'$text': {'search': '"' + facet + '"', 'language': 'none'}});
+          } else {
+            match['$text'] = facet;
+          }
+          break;
+        case 'createdAt':
+          const start = facet['begin'] || undefined;
+          const end = facet['end'] || undefined;
+          if (start && end) {
+            if (loopback) {
+              match.push({creationTime: {gte: start}});
+              match.push({creationTime: {lte: end}});
+            } else {
+              match['createdAt'] = {$gte: start, $lte: end};
+            }
+          }
+          break;
+        case 'type':
+          if (loopback) {
+            match.push({'type': facet});
+          } else {
+            match['type'] = facet;
+          }
+          break;
+        default:
+          // TODO handle default case for array and text types in Mongo (defaults to array)
+          const obj = {};
+          if (loopback && facet.length > 0) {
+            obj[key] = {inq: facet};
+            match.push(obj);
+          } else if (facet.length > 0) {
+            match[key] = {'$in': facet};
+          }
+          break;
+      }
+    }
+  });
+  //console.log("Resulting match expression:",match)
+  return match;
+}
+
+function stringSort(a, b) {
+  const val_a = a._id,
+    val_b = b._id;
+  if (val_a < val_b) {
+    return -1;
+  }
+  if (val_a > val_b) {
+    return 1;
+  }
+  return 0;
+}
+
+

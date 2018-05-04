@@ -22,8 +22,12 @@ export class ProposalsListComponent {
     @Input() dataSource;
     @Input() limit;
     //dataSource: MatTableDataSource<any> | null;
-    //@Input() paginator;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+    @Input() paginator;
+  //@ViewChild(MatPaginator) paginator: MatPaginator;
+
+  @Input() filters = {};
+  @Input() subscriptions = [];
+
     constructor(
       private router: Router,
       private store: Store<AppState>,
@@ -55,6 +59,8 @@ export class ProposalsListComponent {
     const index = this.paginator.pageIndex;
     const size = this.paginator.pageSize;
     this.store
+      .select(state => state.proposals.activeFilters)
+      .take(1)
       .subscribe(f => {
         const filters = Object.assign({}, f);
         filters['skip'] = index * size;
@@ -67,7 +73,7 @@ export class ProposalsListComponent {
         }
         // TODO reduce calls when not needed (i.e. no change)
         // if (f.first !== event.first || this.datasets.length === 0) {
-        //this.store.dispatch(new dsa.UpdateProposalFilterAction(filters));
+        this.store.dispatch(new UpdateProposalFilterAction(filters));
         // }
       });
   }
