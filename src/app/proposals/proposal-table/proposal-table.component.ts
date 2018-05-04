@@ -41,6 +41,12 @@ import { PageChangeEvent, SortChangeEvent } from '../proposal-table-pure/proposa
 
 import * as rison from 'rison';
 import { Subscription } from 'rxjs';
+import {
+  FetchProposalsAction,
+  TotalProposalsAction,
+  UpdateProposalFilterAction
+} from "../../state-management/actions/proposals.actions";
+import * as pStore from "../../state-management/state/proposals.store";
 
 @Component({
   selector: 'proposal-table',
@@ -49,7 +55,6 @@ import { Subscription } from 'rxjs';
 })
 export class ProposalTableComponent implements OnInit, OnDestroy {
   @Input() private proposals = [];
-  @Input() private proposals2 = [];
   @Output() private openProposal = new EventEmitter();
 
   private proposals$: Observable<Proposal[]>;
@@ -73,6 +78,14 @@ export class ProposalTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.store.dispatch(new FetchProposalsAction());
+    this.store
+      .select(selectors.proposals.getActiveFilters)
+      .subscribe(filters => {
+        // if (filters.skip !== this.dsTable.first) {
+        new UpdateProposalFilterAction(filters)
+        // }
+      })
     this.proposals$ = this.store.pipe(select(getProposals2));
     this.currentPage$ = this.store.pipe(select(getPage));
     this.limit$ = this.store.select(state => state.proposals.totalProposals);
@@ -80,6 +93,9 @@ export class ProposalTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {}
+
+  setCurrentPage(n: number) {
+  }
 
   onClick(proposal: Proposal): void {
     const proposalId = encodeURIComponent(proposal.proposalId);

@@ -25,7 +25,7 @@ export function proposalsReducer(
 
         case FETCH_PROPOSALS_COMPLETE: {
             const proposals = (action as FetchProposalsCompleteAction).proposals;
-            return {...state, proposals, hasFetched: true, totalProposals: proposals.length};
+            return {...state, proposals, hasFetched: true};
         }
         case FETCH_PROPOSAL_COMPLETE: {
             const proposal = (action as FetchProposalCompleteAction).proposal;

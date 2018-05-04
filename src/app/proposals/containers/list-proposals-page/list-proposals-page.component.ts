@@ -19,11 +19,12 @@ import {MatPaginator, MatTableDataSource} from "@angular/material";
 import {AfterViewInit} from "@angular/core/src/metadata/lifecycle_hooks";
 import * as dsa from "../../../state-management/actions/datasets.actions";
 import { ProposalsService } from '../../proposals.service';
+import {FetchProposalAction} from "../../../state-management/actions/proposals.actions";
 
 @Component({
     selector: 'list-proposals-page',
     template: `
-        <proposal-table [proposals2]="proposals">
+        <proposal-table [proposals]="proposals | async">
         </proposal-table>
     `
 })
@@ -44,7 +45,7 @@ export class ListProposalsPageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-      this.proposals = this.proposalService.getProposals();
+      //this.store.dispatch(new FetchProposalsAction());
     }
 
     ngOnDestroy() {

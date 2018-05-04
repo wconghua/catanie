@@ -86,9 +86,9 @@ export class ProposalsEffects {
       );*/
   @Effect()
   protected facetProposalCount$: Observable<Action> =
-    this.actions$.ofType(FILTER_PROPOSALS_UPDATE)
+    this.actions$.ofType(FETCH_PROPOSALS)
       .debounceTime(300)
-      .map((action: DatasetActions.UpdateFilterAction) => action.payload)
+      .map((action: UpdateProposalFilterAction) => action.payload)
       .switchMap(payload => {
         const fq = Object.assign({}, payload);
         const match = handleFacetPayload(fq, true);
