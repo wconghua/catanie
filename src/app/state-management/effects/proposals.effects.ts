@@ -86,7 +86,7 @@ export class ProposalsEffects {
       );*/
   @Effect()
   protected facetProposalCount$: Observable<Action> =
-    this.actions$.ofType(FETCH_PROPOSALS)
+    this.actions$.ofType(FILTER_PROPOSALS_UPDATE)
       .debounceTime(300)
       .map((action: UpdateProposalFilterAction) => action.payload)
       .switchMap(payload => {

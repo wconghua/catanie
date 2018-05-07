@@ -7,7 +7,8 @@ import {
     FetchProposalsCompleteAction, FETCH_PROPOSALS_COMPLETE,
     FetchProposalCompleteAction, FETCH_PROPOSAL_COMPLETE,
     FetchDatasetsForProposalCompleteAction, FETCH_DATASETS_FOR_PROPOSAL_COMPLETE,
-    FILTER_PROPOSALS_UPDATE, FILTER_PROPOSALS_VALUE_UPDATE, FILTER_PROPOSALS_UPDATE_COMPLETE, TOTAL_PROPOSALS_UPDATE
+    FILTER_PROPOSALS_UPDATE, FILTER_PROPOSALS_VALUE_UPDATE, FILTER_PROPOSALS_UPDATE_COMPLETE, TOTAL_PROPOSALS_UPDATE,
+    GoToPageAction, GO_TO_PAGE
 } from '../actions/proposals.actions';
 
 import { LogoutCompleteAction, LOGOUT_COMPLETE } from '../actions/user.actions';
@@ -55,6 +56,16 @@ export function proposalsReducer(
         case TOTAL_PROPOSALS_UPDATE: {
           const totalProposals = <number>action['payload'];
           return {...state, totalProposals};
+        }
+        case GO_TO_PAGE: {
+          const page = (action as GoToPageAction).page;
+          const skip = page * state.itemsPerPage3;
+          const activeFilters = {...state.activeFilters, skip};
+          return {
+            ...state,
+            activeFilters,
+            currentPage3: page
+          };
         }
         case LOGOUT_COMPLETE:
             return {...initialProposalsState};

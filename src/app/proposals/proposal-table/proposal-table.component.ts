@@ -79,13 +79,14 @@ export class ProposalTableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.store.dispatch(new FetchProposalsAction());
-    this.store
+    this.store.dispatch(new UpdateProposalFilterAction(this.store.select(selectors.proposals.getActiveFilters)));
+    /*this.store
       .select(selectors.proposals.getActiveFilters)
       .subscribe(filters => {
         // if (filters.skip !== this.dsTable.first) {
         new UpdateProposalFilterAction(filters)
         // }
-      })
+      })*/
     this.proposals$ = this.store.pipe(select(getProposals2));
     this.currentPage$ = this.store.pipe(select(getPage));
     this.limit$ = this.store.select(state => state.proposals.totalProposals);
