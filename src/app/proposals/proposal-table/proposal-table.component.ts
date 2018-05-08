@@ -54,16 +54,17 @@ import * as pStore from "../../state-management/state/proposals.store";
   styleUrls: ['./proposal-table.component.scss']
 })
 export class ProposalTableComponent implements OnInit, OnDestroy {
-  @Input() private proposals = [];
+  //@Input() private proposals = [];
   @Output() private openProposal = new EventEmitter();
 
-  private proposals$: Observable<Proposal[]>;
-  private currentPage$: Observable<number>;
-  private proposalCount$: Observable<number>;
+  //@Input() private proposals$: Observable<Proposal[]>;
+  @Input() private proposals$: Observable<Proposal[]>;
+  @Input() private currentPage: Observable<number>;
+  @Input() private proposalCount$: Observable<number>;
 
   // compatibility analogs of observables
-  private loading$: Observable<boolean>;
-  private limit$: Observable<number>;
+  @Input() private loading: Observable<boolean>;
+  @Input() private limit: Observable<number>;
   propos = [];
 
   constructor(
@@ -73,13 +74,13 @@ export class ProposalTableComponent implements OnInit, OnDestroy {
     private store: Store<any>,
     public dialog: MatDialog,
   ) {
-    this.proposalCount$ = this.store.select(selectors.proposals.getTotalSets);
-    this.loading$ = this.store.select(selectors.proposals.getLoading);
+    //this.proposalCount$ = this.store.select(selectors.proposals.getTotalSets);
+    //this.loading$ = this.store.select(selectors.proposals.getLoading);
   }
 
   ngOnInit() {
-    this.store.dispatch(new FetchProposalsAction());
-    this.store.dispatch(new UpdateProposalFilterAction(this.store.select(selectors.proposals.getActiveFilters)));
+    //this.store.dispatch(new FetchProposalsAction());
+    //this.store.dispatch(new UpdateProposalFilterAction(this.store.select(selectors.proposals.getActiveFilters)));
     /*this.store
       .select(selectors.proposals.getActiveFilters)
       .subscribe(filters => {
@@ -87,9 +88,9 @@ export class ProposalTableComponent implements OnInit, OnDestroy {
         new UpdateProposalFilterAction(filters)
         // }
       })*/
-    this.proposals$ = this.store.pipe(select(getProposals2));
-    this.currentPage$ = this.store.pipe(select(getPage));
-    this.limit$ = this.store.select(state => state.proposals.totalProposals);
+    //this.proposals$ = this.store.pipe(select(getProposals2));
+    //this.currentPage$ = this.store.pipe(select(getPage));
+    //this.limit$ = this.store.select(state => state.proposals.totalProposals);
 
   }
 

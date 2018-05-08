@@ -20,19 +20,26 @@ import {AfterViewInit} from "@angular/core/src/metadata/lifecycle_hooks";
 import * as dsa from "../../../state-management/actions/datasets.actions";
 import { ProposalsService } from '../../proposals.service';
 import {FetchProposalAction} from "../../../state-management/actions/proposals.actions";
+import {getPage, getProposals2} from "../../../state-management/selectors/proposals.selectors";
+import {PageChangeEvent} from "../../proposal-table-pure/proposal-table-pure.component";
+import * as psa from "../../../state-management/actions/proposals.actions";
 
 @Component({
     selector: 'list-proposals-page',
     template: `
-        <proposal-table [proposals]="proposals | async">
+        <proposal-table [proposals$]="proposals$" [currentPage]="currentPage$" [limit]="limit$" [loading]="loading$" [proposalCount$]="proposalCount$">
         </proposal-table>
     `
 })
 export class ListProposalsPageComponent implements OnInit, OnDestroy {
     private subscription: Subscription;
-    private proposals: Observable<Proposal[]>;
+    private proposals$: Observable<Proposal[]>;
     subscriptions = [];
     propos = [];
+    private limit$: Observable<number>;
+    private currentPage$: Observable<number>;
+    private proposalCount$: Observable<number>;
+    private loading$: Observable<boolean>;
 
     constructor(
       private store: Store<AppState>,
@@ -41,11 +48,17 @@ export class ListProposalsPageComponent implements OnInit, OnDestroy {
 
     )
     {
-
+      this.proposalCount$ = this.store.select(selectors.proposals.getTotalSets);
+      this.loading$ = this.store.select(selectors.proposals.getLoading);
     }
 
     ngOnInit() {
-      //this.store.dispatch(new FetchProposalsAction());
+      this.store.dispatch(new FetchProposalsAction());
+      this.store.dispatch(new UpdateProposalFilterAction(this.store.select(selectors.proposals.getActiveFilters)));
+      //this.proposals$ = this.store.pipe(select(getProposals2));
+      this.currentPage$ = this.store.pipe(select(getPage));
+      this.limit$ = this.store.select(state => state.proposals.totalProposals);
+
     }
 
     ngOnDestroy() {

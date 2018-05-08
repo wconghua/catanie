@@ -35,8 +35,8 @@ export const routes: Routes = [
   { path: 'dataset/:id/datablocks', component: DatablocksComponent, canActivate: [AuthCheck] },
   { path: 'dataset/:id/datafiles', component: DatafilesComponent, canActivate: [AuthCheck] },
 
-  //{ path: 'proposals', component: ListProposalsPageComponent, canActivate: [AuthCheck] },
-  { path: 'proposals', component: ProposalTableComponent, canActivate: [AuthCheck] },
+  { path: 'proposals', component: ListProposalsPageComponent, canActivate: [AuthCheck] },
+  //{ path: 'proposals', component: ProposalTableComponent, canActivate: [AuthCheck] },
   { path: 'proposals/:id', component: ViewProposalPageComponent, canActivate: [AuthCheck] },
 
   { path: 'user', component: UserDetailsComponent, canActivate: [AuthCheck] },

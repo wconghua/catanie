@@ -130,7 +130,7 @@ export class ProposalsEffects {
 
         filter['limit'] = fq['limit'] ? fq['limit'] : 30;
         filter['skip'] = fq['skip'] ? fq['skip'] : 0;
-        filter['include'] = [{ relation: 'datasetlifecycle' }];
+        //filter['include'] = [{ relation: 'datasetlifecycle' }];
         if (fq['sortField']) {
           filter['order'] = fq['sortField'];
         }
