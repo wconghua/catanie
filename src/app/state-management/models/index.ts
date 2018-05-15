@@ -32,11 +32,12 @@ export interface DatasetFilters {
 
 export interface ProposalFilters {
   text: string;
-  ownerGroup: string[];
-  type: string;
+  //ownerGroup: string[];
+  title: string;
+  //abstract: string;
   creationTime: {'start': Date, 'end': Date};
-  creationLocation: string[];
+  //creationLocation: string[];
   skip: number;
   initial: boolean;
-  keywords: string[];
+  //keywords: string[];
 };

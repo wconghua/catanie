@@ -2,13 +2,13 @@ import { Action, ActionReducer } from '@ngrx/store';
 import { ProposalsState, initialProposalsState } from '../state/proposals.store';
 
 import {
-    ProposalsAction,
-    SelectProposalAction, SELECT_PROPOSAL,
-    FetchProposalsCompleteAction, FETCH_PROPOSALS_COMPLETE,
-    FetchProposalCompleteAction, FETCH_PROPOSAL_COMPLETE,
-    FetchDatasetsForProposalCompleteAction, FETCH_DATASETS_FOR_PROPOSAL_COMPLETE,
-    FILTER_PROPOSALS_UPDATE, FILTER_PROPOSALS_VALUE_UPDATE, FILTER_PROPOSALS_UPDATE_COMPLETE, TOTAL_PROPOSALS_UPDATE,
-    GoToPageAction, GO_TO_PAGE
+  ProposalsAction,
+  SelectProposalAction, SELECT_PROPOSAL,
+  FetchProposalsCompleteAction, FETCH_PROPOSALS_COMPLETE,
+  FetchProposalCompleteAction, FETCH_PROPOSAL_COMPLETE,
+  FetchDatasetsForProposalCompleteAction, FETCH_DATASETS_FOR_PROPOSAL_COMPLETE,
+  FILTER_PROPOSALS_UPDATE, FILTER_PROPOSALS_VALUE_UPDATE, FILTER_PROPOSALS_UPDATE_COMPLETE, TOTAL_PROPOSALS_UPDATE,
+  GoToPageAction, GO_TO_PAGE, SORT_BY_COLUMN, SortByColumnAction
 } from '../actions/proposals.actions';
 
 import { LogoutCompleteAction, LOGOUT_COMPLETE } from '../actions/user.actions';
@@ -66,6 +66,12 @@ export function proposalsReducer(
             activeFilters,
             currentPage3: page
           };
+        }
+        case SORT_BY_COLUMN:{
+          const {column, direction} = action as SortByColumnAction;
+          const sortField = column + ':' + direction;
+          const activeFilters = {...state.activeFilters, sortField};
+          return {...state, activeFilters};
         }
         case LOGOUT_COMPLETE:
             return {...initialProposalsState};

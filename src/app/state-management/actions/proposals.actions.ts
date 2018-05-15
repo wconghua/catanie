@@ -22,6 +22,7 @@ export const FETCH_DATASETS_FOR_PROPOSAL            = '[Proposals] Fetch Dataset
 export const FETCH_DATASETS_FOR_PROPOSAL_COMPLETE   = '[Proposals] Fetch Datasets for Proposal Complete';
 export const FETCH_DATASETS_FOR_PROPOSAL_FAILED     = '[Proposals] Fetch Datasets for Proposal Failed';
 export const FILTER_PROPOSALS_UPDATE =                '[Proposals] Filter Update';
+export const FILTER_PROPOSALS_UPDATE_FAILED =                '[Proposals] Filter Update Failed';
 export const FILTER_PROPOSALS_VALUE_UPDATE =                '[Proposals] Filter Value Update';
 export const FILTER_PROPOSALS_UPDATE_COMPLETE =                '[Proposals] Filter Update Complete';
 
@@ -41,6 +42,7 @@ export class SelectProposalAction implements Action {
 
 export class FetchProposalsAction implements Action {
     type = FETCH_PROPOSALS;
+    constructor(public payload: any) {}
 }
 
 export class FetchProposalsCompleteAction implements Action {
@@ -90,6 +92,10 @@ export class UpdateProposalFilterCompleteAction implements Action {
   constructor(public payload: any) {}
 }
 
+export class UpdateProposalFilterFailedAction implements Action {
+  type = FILTER_PROPOSALS_UPDATE_FAILED;
+}
+
 export class FilterProposalValueAction implements Action {
   readonly type = FILTER_PROPOSALS_VALUE_UPDATE;
   constructor(public payload?: any) {}
@@ -122,8 +128,6 @@ export class SearchProposalsFailedAction implements Action {
 
 
 
-
-
 export type FetchProposalsOutcomeAction =
 	FetchProposalsCompleteAction |
     FetchProposalsFailedAction;
@@ -141,5 +145,5 @@ export type ProposalsAction =
     FetchProposalsAction | FetchProposalsOutcomeAction |
     FetchProposalAction | FetchProposalOutcomeAction |
     FetchDatasetsForProposalAction | FetchDatasetsForProposalOutcomeAction |
-    SearchProposalCompleteAction | UpdateProposalFilterAction |TotalProposalsAction |
-    GoToPageAction | SortByColumnAction | SearchProposalsFailedAction;
+    SearchProposalCompleteAction | UpdateProposalFilterAction | UpdateProposalFilterFailedAction |
+    TotalProposalsAction | GoToPageAction | SortByColumnAction | SearchProposalsFailedAction;

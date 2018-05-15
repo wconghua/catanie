@@ -17,9 +17,27 @@ export interface ProposalsState {
 export const initialProposalsState: ProposalsState = {
   proposals: [],
 	datasets: {},
-  activeFilters: <ProposalFilters>{ text: null, creationTime: null, type: null,
-    creationLocation: [], ownerGroup: [], skip: 0, initial: true, sortField: 'createdAt desc', keywords: []},
-  filterValues: {creationTime: {start: null, end: null}, creationLocation: [], ownerGroup: [], text: null, type: null, keywords: []},
+  activeFilters: <ProposalFilters>{
+    text: null,
+    creationTime: null,
+    title: null,
+    //abstract: null,
+    //creationLocation: [],
+    //ownerGroup: [],
+    skip: 0,
+    initial: true,
+    sortField: 'createdAt desc',
+    //keywords: []
+  },
+  filterValues: {
+    creationTime: {start: null, end: null},
+    //creationLocation: [],
+    //ownerGroup: [],
+    text: null,
+    title: null,
+    //abstract: null,
+    //keywords: []
+  },
 	hasFetched: false,
 	selectedId: null,
   totalProposals: 0,

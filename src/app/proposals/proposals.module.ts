@@ -20,12 +20,20 @@ import { DatasetService } from '../datasets/dataset.service';
 import { proposalsReducer } from '../state-management/reducers/proposals.reducer';
 import { ProposalsEffects } from '../state-management/effects/proposals.effects';
 
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+
 import {
   MatListModule,
   MatTableModule,
   MatTabsModule,
   MatCardModule,
   MatPaginatorModule,
+  MatTooltipModule,
+  MatStepperModule,
+  MatFormFieldModule,
+  MatOptionModule,
+  MatSortModule,
+  MatInputModule,
 } from '@angular/material';
 import {ProposalTablePureComponent} from "./proposal-table-pure/proposal-table-pure.component";
 
@@ -42,6 +50,13 @@ import {ProposalTablePureComponent} from "./proposal-table-pure/proposal-table-p
         MatTabsModule,
         MatTableModule,
         MatPaginatorModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatTooltipModule,
+        MatOptionModule,
+        MatInputModule,
+        FormsModule,
+
     ],
     declarations: [
         ListProposalsPageComponent,

@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {Component, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 import { Proposal } from 'state-management/models';
+import {MatSort} from "@angular/material";
 
 export interface PageChangeEvent {
   pageIndex: number;
@@ -23,12 +24,14 @@ export class ProposalTablePureComponent {
   @Input() private currentPage: number;
   @Input() private rowClassifier?: (proposal: Proposal) => string;
 
+  @Input() private matSort: MatSort;
+
   @Output() private onClick: EventEmitter<Proposal> = new EventEmitter();
   @Output() private onPageChange: EventEmitter<PageChangeEvent> = new EventEmitter();
   @Output() private onSortChange: EventEmitter<SortChangeEvent> = new EventEmitter();
 
   private displayedColumns: string[] = [
-    'select',
+    //'select',
     'proposalId',
     'title',
     'abstract',

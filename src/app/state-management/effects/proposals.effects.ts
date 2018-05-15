@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { map, mergeMap, take, catchError } from 'rxjs/operators';
 import * as lb from 'shared/sdk/services';
 import { ProposalsService } from 'proposals/proposals.service';
+import 'rxjs/add/operator/withLatestFrom';
 
 import {
   FetchProposalsOutcomeAction,
@@ -24,16 +25,18 @@ import {
   FetchDatasetsForProposalFailedAction,
   UpdateProposalFilterAction, FILTER_PROPOSALS_UPDATE, SearchProposalCompleteAction,
   TotalProposalsAction, TOTAL_PROPOSALS_UPDATE, ProposalsAction,
-  SearchProposalsFailedAction
+  SearchProposalsFailedAction, GO_TO_PAGE, SORT_BY_COLUMN
 } from '../actions/proposals.actions';
 
 import { Proposal } from '../models';
 import * as DatasetActions from "../actions/datasets.actions";
 import {ProposalApi} from "../../shared/sdk/services/custom/Proposal";
+import {getActiveFilters} from "../selectors/proposals.selectors";
+import {AppState} from "../state/app.store";
 
 @Injectable()
 export class ProposalsEffects {
-	@Effect() getProposals$: Observable<FetchProposalsOutcomeAction> = this.actions$.pipe(
+	/*@Effect() getProposals$: Observable<FetchProposalsOutcomeAction> = this.actions$.pipe(
 		ofType<FetchProposalsAction>(FETCH_PROPOSALS),
 		mergeMap(action =>
 			this.proposalsService.getProposals().pipe(
@@ -41,7 +44,35 @@ export class ProposalsEffects {
 				catchError(() => Observable.of(new FetchProposalsFailedAction()))
 			)
 		)
-	);
+	);*/
+
+
+  @Effect() getProposals$: Observable<FetchProposalsOutcomeAction> =
+    this.actions$.ofType(FETCH_PROPOSALS)
+    .debounceTime(300)
+    .map((action: UpdateProposalFilterAction) => action.payload)
+    .switchMap(payload => {
+      const limits= {};
+      limits['limit'] = payload['limit'] ? payload['limit'] : 30;
+      limits['skip'] = payload['skip'] ? payload['skip'] : 0;
+      limits['order'] = payload['sortField'] ? payload['sortField'] : "createdAt:desc";
+      // remove fields not relevant for facet filters
+      // TODO understand what defines the structure of the payload.
+      // TODO What is the meaning of "initial"
+      const fq={}
+      Object.keys(payload).forEach(key => {
+        // console.log("======key,payload[key]",key,payload[key])
+        if (['initial','sortField','skip','limit'].indexOf(key)>=0)return
+        if (payload[key] === null) return
+        if (typeof payload[key] === 'undefined' || payload[key].length == 0) return
+        fq[key]=payload[key]
+      })
+
+      return this.proposalsService.getFilteredProposals(limits).pipe(
+        map(proposals => new FetchProposalsCompleteAction(proposals)),
+        catchError(() => Observable.of(new FetchProposalsFailedAction())
+        ));
+    });
 
   @Effect() getProposalsCount$: Observable<FetchProposalsOutcomeAction> = this.actions$.pipe(
     ofType<FetchProposalsAction>(FETCH_PROPOSALS),
@@ -90,17 +121,23 @@ export class ProposalsEffects {
       .debounceTime(300)
       .map((action: UpdateProposalFilterAction) => action.payload)
       .switchMap(payload => {
-        const fq = Object.assign({}, payload);
-        const match = handleFacetPayload(fq, true);
-        let filter = {};
-        if (match.length > 1) {
-          filter = {};
-          filter['and'] = match;
-        } else if (match.length === 1) {
-          filter = match[0];
-        }
+        const limits= {};
+        limits['limit'] = payload['limit'] ? payload['limit'] : 30;
+        limits['skip'] = payload['skip'] ? payload['skip'] : 0;
+        limits['order'] = payload['sortField'] ? payload['sortField'] : "createdAt:desc";
+        // remove fields not relevant for facet filters
+        // TODO understand what defines the structure of the payload.
+        // TODO What is the meaning of "initial"
+        const fq={}
+        Object.keys(payload).forEach(key => {
+          // console.log("======key,payload[key]",key,payload[key])
+          if (['initial','sortField','skip','limit'].indexOf(key)>=0)return
+          if (payload[key] === null) return
+          if (typeof payload[key] === 'undefined' || payload[key].length == 0) return
+          fq[key]=payload[key]
+        })
 
-        return this.ps.count(filter)
+        return this.ps.count(limits)
           .switchMap(res => {
             return Observable.of(new TotalProposalsAction(res['count']));
           })
@@ -111,60 +148,98 @@ export class ProposalsEffects {
 
       });
 
-  @Effect()
+  /*@Effect()
   protected facetProposals$: Observable<Action> =
     this.actions$.ofType(FILTER_PROPOSALS_UPDATE)
       .debounceTime(300)
       .map((action: UpdateProposalFilterAction) => action.payload)
       .switchMap(payload => {
-        const fq = Object.assign({}, payload);
-        const match = handleFacetPayload(fq, true);
-        const filter = {};
-        if (match.length > 1) {
-          filter['where'] = {};
-
-          filter['where']['and'] = match;
-        } else if (match.length === 1) {
-          filter['where'] = match[0];
-        }
-
-        filter['limit'] = fq['limit'] ? fq['limit'] : 30;
-        filter['skip'] = fq['skip'] ? fq['skip'] : 0;
-        //filter['include'] = [{ relation: 'datasetlifecycle' }];
-        if (fq['sortField']) {
-          filter['order'] = fq['sortField'];
-        }
-        return this.ps.find(filter)
+        const limits= {};
+        limits['limit'] = payload['limit'] ? payload['limit'] : 30;
+        limits['skip'] = payload['skip'] ? payload['skip'] : 0;
+        limits['order'] = payload['sortField'] ? payload['sortField'] : "createdAt:desc";
+        // remove fields not relevant for facet filters
+        // TODO understand what defines the structure of the payload.
+        // TODO What is the meaning of "initial"
+        const fq={}
+        Object.keys(payload).forEach(key => {
+          // console.log("======key,payload[key]",key,payload[key])
+          if (['initial','sortField','skip','limit'].indexOf(key)>=0)return
+          if (payload[key] === null) return
+          if (typeof payload[key] === 'undefined' || payload[key].length == 0) return
+          fq[key]=payload[key]
+        })
+        return this.ps.fullquery (limits)
           .switchMap(res => {
             console.log(res);
-            return Observable.of(new SearchProposalCompleteAction(res));
-          })
-          .catch(err => {
-            console.log(err);
-            return Observable.of(new SearchProposalsFailedAction(err));
-          });
-      });
-
-
-  /*@Effect()
-  protected getProposalsCount$: Observable<Action> =
-  this.actions$.ofType(FILTER_PROPOSALS_UPDATE)
-    .map((action: UpdateProposalFilterAction) => action.payload)
-    .switchMap(payload => {
-      const filter = {};
-      const fq = Object.assign({}, payload);
-      filter['limit'] = fq['limit'] ? fq['limit'] : 30;
-      return this.ps.count(filter)
-          .switchMap(res => {
-            console.log(res);
-            return Observable.of(new TotalProposalsAction(res['count']));
+            return Observable.of(new FetchProposalsCompleteAction(res as Proposal[]));
           })
           .catch(err => {
             console.log(err);
             return Observable.of(new FetchProposalsFailedAction());
           });
+      });*/
+
+  @Effect()
+  protected facetProposals$: Observable<Action> =
+    this.actions$.ofType(FILTER_PROPOSALS_UPDATE)
+    .debounceTime(300)
+    .map((action: UpdateProposalFilterAction) => action.payload)
+    .switchMap(payload => {
+      const fq = Object.assign({}, payload);
+      const match = handleFacetPayload(fq, true);
+      const filter = {};
+      if (match.length > 1) {
+        filter['where'] = {};
+
+        filter['where']['and'] = match;
+      } else if (match.length === 1) {
+        filter['where'] = match[0];
       }
-    );
+
+      filter['limit'] = fq['limit'] ? fq['limit'] : 30;
+      filter['skip'] = fq['skip'] ? fq['skip'] : 0;
+      if (fq['sortField']) {
+        filter['order'] = fq['sortField'];
+      }
+      return this.ps.find (filter)
+        .switchMap(res => {
+          console.log(res);
+          return Observable.of(new FetchProposalsCompleteAction(res as Proposal[]));
+        })
+        .catch(err => {
+          console.log(err);
+          return Observable.of(new FetchProposalsFailedAction());
+        });
+    });
+
+@Effect()
+protected triggerFacetProposals$: Observable<Action> =
+  this.actions$.ofType(GO_TO_PAGE, SORT_BY_COLUMN)
+    .withLatestFrom(this.store.select(getActiveFilters))
+    .map(([action, filter]) => {
+      return new UpdateProposalFilterAction(filter);
+    });
+
+/*@Effect()
+protected getProposalsCount$: Observable<Action> =
+this.actions$.ofType(FILTER_PROPOSALS_UPDATE)
+  .map((action: UpdateProposalFilterAction) => action.payload)
+  .switchMap(payload => {
+    const filter = {};
+    const fq = Object.assign({}, payload);
+    filter['limit'] = fq['limit'] ? fq['limit'] : 30;
+    return this.ps.count(filter)
+        .switchMap(res => {
+          console.log(res);
+          return Observable.of(new TotalProposalsAction(res['count']));
+        })
+        .catch(err => {
+          console.log(err);
+          return Observable.of(new FetchProposalsFailedAction());
+        });
+    }
+  );
 */
 	@Effect() getProposal$: Observable<FetchProposalOutcomeAction> = this.actions$.pipe(
 		ofType<FetchProposalAction>(FETCH_PROPOSAL),
@@ -190,7 +265,8 @@ export class ProposalsEffects {
 	constructor(
 		private actions$: Actions,
 		private proposalsService: ProposalsService,
-    private ps: lb.ProposalApi
+    private ps: lb.ProposalApi,
+    private store: Store<AppState>
 	) {}
 }
 

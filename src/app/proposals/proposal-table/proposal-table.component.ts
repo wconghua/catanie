@@ -47,13 +47,15 @@ import {
   UpdateProposalFilterAction
 } from "../../state-management/actions/proposals.actions";
 import * as pStore from "../../state-management/state/proposals.store";
+import {AfterViewInit} from "@angular/core/src/metadata/lifecycle_hooks";
+import * as dsa from "../../state-management/actions/datasets.actions";
 
 @Component({
   selector: 'proposal-table',
   templateUrl: './proposal-table.component.html',
   styleUrls: ['./proposal-table.component.scss']
 })
-export class ProposalTableComponent implements OnInit, OnDestroy {
+export class ProposalTableComponent implements OnInit, OnDestroy, AfterViewInit {
   //@Input() private proposals = [];
   @Output() private openProposal = new EventEmitter();
 
@@ -65,7 +67,10 @@ export class ProposalTableComponent implements OnInit, OnDestroy {
   // compatibility analogs of observables
   @Input() private loading: Observable<boolean>;
   @Input() private limit: Observable<number>;
-  propos = [];
+
+  @Input() private matSort: MatSort;
+  @Input() private searchText$;
+  tooltipPos = 'below';
 
   constructor(
     private router: Router,
@@ -74,29 +79,17 @@ export class ProposalTableComponent implements OnInit, OnDestroy {
     private store: Store<any>,
     public dialog: MatDialog,
   ) {
-    //this.proposalCount$ = this.store.select(selectors.proposals.getTotalSets);
-    //this.loading$ = this.store.select(selectors.proposals.getLoading);
   }
 
   ngOnInit() {
-    //this.store.dispatch(new FetchProposalsAction());
-    //this.store.dispatch(new UpdateProposalFilterAction(this.store.select(selectors.proposals.getActiveFilters)));
-    /*this.store
-      .select(selectors.proposals.getActiveFilters)
-      .subscribe(filters => {
-        // if (filters.skip !== this.dsTable.first) {
-        new UpdateProposalFilterAction(filters)
-        // }
-      })*/
-    //this.proposals$ = this.store.pipe(select(getProposals2));
-    //this.currentPage$ = this.store.pipe(select(getPage));
-    //this.limit$ = this.store.select(state => state.proposals.totalProposals);
-
   }
 
   ngOnDestroy() {}
 
   setCurrentPage(n: number) {
+  }
+
+  ngAfterViewInit() {
   }
 
   onClick(proposal: Proposal): void {
@@ -121,4 +114,21 @@ export class ProposalTableComponent implements OnInit, OnDestroy {
     }*/
     return 'row-generic';
   }
+
+  /**
+   * Handles free text search.
+   * Need to determine best way to search mongo fields
+   * @param {any} customTerm - free text search term@memberof ProposalTableComponent
+   */
+  textSearch(terms) {
+    this.store
+      .select(state => state.proposals.activeFilters)
+      .take(1)
+      .subscribe(values => {
+        const filters = Object.assign({}, values);
+        filters['text'] = terms;
+        this.store.dispatch(new psa.UpdateProposalFilterAction(filters));
+      });
+  }
+
 }

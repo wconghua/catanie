@@ -15,7 +15,7 @@ import { FetchProposalsAction, UpdateProposalFilterAction } from 'state-manageme
 
 import { Router } from "@angular/router";
 import * as selectors from "../../../state-management/selectors";
-import {MatPaginator, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatSort, MatSortable, MatTableDataSource} from "@angular/material";
 import {AfterViewInit} from "@angular/core/src/metadata/lifecycle_hooks";
 import * as dsa from "../../../state-management/actions/datasets.actions";
 import { ProposalsService } from '../../proposals.service';
@@ -23,15 +23,22 @@ import {FetchProposalAction} from "../../../state-management/actions/proposals.a
 import {getPage, getProposals2} from "../../../state-management/selectors/proposals.selectors";
 import {PageChangeEvent} from "../../proposal-table-pure/proposal-table-pure.component";
 import * as psa from "../../../state-management/actions/proposals.actions";
+import * as ds from "../../../state-management/selectors/datasets.selectors";
 
 @Component({
     selector: 'list-proposals-page',
     template: `
-        <proposal-table [proposals$]="proposals$" [currentPage]="currentPage$" [limit]="limit$" [loading]="loading$" [proposalCount$]="proposalCount$">
+        <proposal-table [proposals$]="proposals$" 
+                        [currentPage]="currentPage$" 
+                        [limit]="limit$" 
+                        [loading]="loading$" 
+                        [proposalCount$]="proposalCount$"
+                        [searchText$]="searchText$ | async"
+                        [matSort]="matSort">
         </proposal-table>
     `
 })
-export class ListProposalsPageComponent implements OnInit, OnDestroy {
+export class ListProposalsPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private subscription: Subscription;
     private proposals$: Observable<Proposal[]>;
     subscriptions = [];
@@ -40,6 +47,8 @@ export class ListProposalsPageComponent implements OnInit, OnDestroy {
     private currentPage$: Observable<number>;
     private proposalCount$: Observable<number>;
     private loading$: Observable<boolean>;
+    @ViewChild(MatSort) matSort: MatSort;
+    searchText$;
 
     constructor(
       private store: Store<AppState>,
@@ -53,16 +62,20 @@ export class ListProposalsPageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-      this.store.dispatch(new FetchProposalsAction());
+      //this.store.dispatch(new FetchProposalsAction(this.store.select(selectors.proposals.getActiveFilters)));
       this.store.dispatch(new UpdateProposalFilterAction(this.store.select(selectors.proposals.getActiveFilters)));
-      //this.proposals$ = this.store.pipe(select(getProposals2));
+      this.proposals$ = this.store.pipe(select(getProposals2));
       this.currentPage$ = this.store.pipe(select(getPage));
       this.limit$ = this.store.select(state => state.proposals.totalProposals);
+      this.searchText$ = this.store.select(selectors.proposals.getText);
 
     }
 
     ngOnDestroy() {
        // this.subscription.unsubscribe();
+    }
+
+    ngAfterViewInit() {
     }
 
 };
