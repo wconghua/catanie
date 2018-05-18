@@ -18,21 +18,14 @@ export class ObjectTableComponent {
     const keys = Object.keys(obj);
     keys.forEach(key => {
         const value = obj[key];
-        if (typeof value === 'string') {
-            res.push({key, value, level});
-        } else if (
-            typeof value === 'number' ||
-            typeof value === 'boolean' ||
-            value === null
-        ) {
-            const str = JSON.stringify(value);
-            res.push({key, value: str, level});
-        } else if (typeof value === 'object') {
-            res.push({key, value: null, level});
-            this.objectToEntries(value, level + 1, res);
+        if (typeof value === 'object') {
+          res.push({key, value: null, level});
+          this.objectToEntries(value, level + 1, res);
+        } else {
+          const str = String(value);
+          res.push({key, value: str, level});
         }
     });
-
     return res;
   }
 
