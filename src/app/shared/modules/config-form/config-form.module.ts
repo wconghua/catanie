@@ -38,6 +38,7 @@ import {
   MatTooltipModule,
   MatStepperModule,
 } from '@angular/material';
+import { ObjectTableComponent } from './object-table/object-table.component';
 
 @NgModule({
   imports : [
@@ -55,7 +56,8 @@ import {
   declarations : [
     ConfigFormComponent,
     ObjKeysPipe,
-    TitleCasePipe
+    TitleCasePipe,
+    ObjectTableComponent
   ],
   exports: [ConfigFormComponent]
 })

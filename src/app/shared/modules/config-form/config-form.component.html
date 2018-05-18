@@ -6,10 +6,13 @@
             <label>{{d.key | titleCase}}</label>
             <div [ngSwitch]="getType(d.key, d.value)">
                 <input ngui-datetime-picker *ngSwitchCase="'Date'" formControlName="{{d.key}}" placeholder="" [close-on-select]="false">
+                <!--
                 <ay-treeTable [value]="objData[d.key]" selectionMode="single" *ngSwitchCase="'object'">
                     <ay-column field="name" header="Name"></ay-column>
                     <ay-column field="value" header="Value"></ay-column>
                 </ay-treeTable>
+                -->
+                <object-table [object]="objData[d.key]" *ngSwitchCase="'object'"></object-table>
                 <mat-slide-toggle
                     [color]="color"
                     [checked]="d.value"

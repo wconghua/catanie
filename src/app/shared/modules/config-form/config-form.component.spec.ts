@@ -17,6 +17,7 @@ import {
   MatSelectModule,
   MatSlideToggleModule,
 } from '@angular/material';
+import { ObjectTableComponent } from './object-table/object-table.component';
 
 describe('ConfigFormComponent', () => {
   let component: ConfigFormComponent;
@@ -27,7 +28,7 @@ describe('ConfigFormComponent', () => {
         .configureTestingModule({
           imports : [ FormsModule, ReactiveFormsModule, NguiDatetimePickerModule, TreeTableModule, StoreModule.forRoot({}),
              MatButtonModule, MatCardModule, MatInputModule, MatSelectModule, MatSlideToggleModule ],
-          declarations : [ ConfigFormComponent, ObjKeysPipe, TitleCasePipe ],
+          declarations : [ ConfigFormComponent, ObjKeysPipe, TitleCasePipe, ObjectTableComponent ],
           providers :
               [
                  {provide : ConfigService, useClass : MockConfigService},

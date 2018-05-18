@@ -87,7 +87,8 @@ export class ConfigFormComponent implements OnInit {
         }
         if (this.getType(prop, this.source[prop]) === 'object') {
           this.objData[prop] =
-            <Object[]>this.getTreeFromObject(this.source[prop]);
+            this.source[prop];
+            //<Object[]>this.getTreeFromObject(this.source[prop]);
         } else if (this.getType(prop, this.source[prop]) === 'array') {
           this.formData[prop] = JSON.stringify(this.source[prop]);
         }

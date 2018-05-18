@@ -1,0 +1,16 @@
+<table class="object-table">
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let entry of getEntries()">
+      <td>
+        <span [ngStyle]="styleForEntry(entry)">{{ entry.key }}</span>
+      </td>
+      <td>{{ entry.value }}</td>
+    </tr>
+  </tbody>
+</table>
