@@ -33,7 +33,7 @@ export class ObjectTableComponent {
     return this.objectToEntries(this.object);
   }
 
-  private styleForEntry(entry: Entry) {
+  private styleForEntry(entry: Entry): object {
     const keyStyle = entry.value === null
       ? {'font-style': 'italic'}
       : {};
