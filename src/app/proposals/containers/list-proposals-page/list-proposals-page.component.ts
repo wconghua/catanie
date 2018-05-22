@@ -3,8 +3,6 @@ import { Store, select } from '@ngrx/store';
 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
-import { map } from 'rxjs/operators/map';
 
 import { AppState } from 'state-management/state/app.store';
 import { ProposalsState } from 'state-management/state/proposals.store';
@@ -38,7 +36,7 @@ import * as ds from "../../../state-management/selectors/datasets.selectors";
         </proposal-table>
     `
 })
-export class ListProposalsPageComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ListProposalsPageComponent implements OnInit, OnDestroy {
     private subscription: Subscription;
     private proposals$: Observable<Proposal[]>;
     subscriptions = [];
@@ -47,6 +45,7 @@ export class ListProposalsPageComponent implements OnInit, OnDestroy, AfterViewI
     private currentPage$: Observable<number>;
     private proposalCount$: Observable<number>;
     private loading$: Observable<boolean>;
+    private activeFilter$: Observable<object>;
     @ViewChild(MatSort) matSort: MatSort;
     searchText$;
 
@@ -62,20 +61,19 @@ export class ListProposalsPageComponent implements OnInit, OnDestroy, AfterViewI
     }
 
     ngOnInit() {
-      //this.store.dispatch(new FetchProposalsAction(this.store.select(selectors.proposals.getActiveFilters)));
-      this.store.dispatch(new UpdateProposalFilterAction(this.store.select(selectors.proposals.getActiveFilters)));
+      this.activeFilter$ = this.store.select(selectors.proposals.getActiveFilters);
       this.proposals$ = this.store.pipe(select(getProposals2));
       this.currentPage$ = this.store.pipe(select(getPage));
       this.limit$ = this.store.select(state => state.proposals.totalProposals);
       this.searchText$ = this.store.select(selectors.proposals.getText);
-
+      
+      this.subscription = this.activeFilter$.subscribe(filter => {
+        this.store.dispatch(new FetchProposalsAction(filter));
+        this.store.dispatch(new UpdateProposalFilterAction(filter));
+      });
     }
 
     ngOnDestroy() {
-       // this.subscription.unsubscribe();
+       this.subscription.unsubscribe();
     }
-
-    ngAfterViewInit() {
-    }
-
 };

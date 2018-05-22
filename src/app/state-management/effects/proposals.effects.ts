@@ -120,33 +120,12 @@ export class ProposalsEffects {
     this.actions$.ofType(FILTER_PROPOSALS_UPDATE)
       .debounceTime(300)
       .map((action: UpdateProposalFilterAction) => action.payload)
-      .switchMap(payload => {
-        const limits= {};
-        limits['limit'] = payload['limit'] ? payload['limit'] : 30;
-        limits['skip'] = payload['skip'] ? payload['skip'] : 0;
-        limits['order'] = payload['sortField'] ? payload['sortField'] : "createdAt:desc";
-        // remove fields not relevant for facet filters
-        // TODO understand what defines the structure of the payload.
-        // TODO What is the meaning of "initial"
-        const fq={}
-        Object.keys(payload).forEach(key => {
-          // console.log("======key,payload[key]",key,payload[key])
-          if (['initial','sortField','skip','limit'].indexOf(key)>=0)return
-          if (payload[key] === null) return
-          if (typeof payload[key] === 'undefined' || payload[key].length == 0) return
-          fq[key]=payload[key]
-        })
-
-        return this.ps.count(limits)
-          .switchMap(res => {
-            return Observable.of(new TotalProposalsAction(res['count']));
-          })
-          .catch(err => {
-            console.log(err);
-            return Observable.of(new SearchProposalsFailedAction(err));
-          });
-
-      });
+      .switchMap(payload => 
+        this.ps
+          .count()
+          .map(res => new TotalProposalsAction(res.count))
+          .catch(err => Observable.of(new SearchProposalsFailedAction(err)))
+      );
 
   /*@Effect()
   protected facetProposals$: Observable<Action> =
