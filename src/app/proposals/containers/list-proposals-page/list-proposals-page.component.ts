@@ -31,7 +31,7 @@ import * as ds from "../../../state-management/selectors/datasets.selectors";
                         [limit]="limit$" 
                         [loading]="loading$" 
                         [proposalCount$]="proposalCount$"
-                        [searchText$]="searchText$ | async"
+                        [searchText$]="searchText$"
                         [matSort]="matSort">
         </proposal-table>
     `
@@ -66,7 +66,7 @@ export class ListProposalsPageComponent implements OnInit, OnDestroy {
       this.currentPage$ = this.store.pipe(select(getPage));
       this.limit$ = this.store.select(state => state.proposals.totalProposals);
       this.searchText$ = this.store.select(selectors.proposals.getText);
-      
+
       this.subscription = this.activeFilter$.subscribe(filter => {
         this.store.dispatch(new FetchProposalsAction(filter));
         this.store.dispatch(new UpdateProposalFilterAction(filter));
