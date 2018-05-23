@@ -120,7 +120,7 @@ export class ProposalsEffects {
     this.actions$.ofType(FILTER_PROPOSALS_UPDATE)
       .debounceTime(300)
       .map((action: UpdateProposalFilterAction) => action.payload)
-      .switchMap(payload => 
+      .switchMap(payload =>
         this.ps
           .count()
           .map(res => new TotalProposalsAction(res.count))
@@ -265,50 +265,11 @@ function handleFacetPayload(fq, loopback = false) {
     let facet = f[key];
     if (facet) {
       switch (key) {
-        case 'ownerGroup':
-          if (facet.length > 0 && facet.constructor !== Array &&
-            typeof facet[0] === 'object') {
-            const groupsArray = [];
-            const keys = Object.keys(facet[0]);
-
-            for (let i = 0; i < keys.length; i++) {
-              groupsArray.push(facet[0][keys[i]]);
-            }
-
-            facet = groupsArray;
-          }
-          if (facet.length > 0) {
-            if (loopback) {
-              match.push({ownerGroup: {inq: facet}});
-            } else {
-              match[key] = {$in: facet};
-            }
-          }
-          break;
         case 'text':
           if (loopback) {
-            match.push({'$text': {'search': '"' + facet + '"', 'language': 'none'}});
+            match.push({'$title': {'search': '"' + facet + '"', 'language': 'none'}});
           } else {
-            match['$text'] = facet;
-          }
-          break;
-        case 'createdAt':
-          const start = facet['begin'] || undefined;
-          const end = facet['end'] || undefined;
-          if (start && end) {
-            if (loopback) {
-              match.push({creationTime: {gte: start}});
-              match.push({creationTime: {lte: end}});
-            } else {
-              match['createdAt'] = {$gte: start, $lte: end};
-            }
-          }
-          break;
-        case 'type':
-          if (loopback) {
-            match.push({'type': facet});
-          } else {
-            match['type'] = facet;
+            match['$title'] = facet;
           }
           break;
         default:
