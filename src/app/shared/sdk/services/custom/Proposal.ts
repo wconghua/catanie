@@ -443,4 +443,35 @@ export class ProposalApi extends BaseLoopBackApi {
     return result;
   }
 
+  /**
+   * Search for numbers associated with proposals properties. I.e. How many proposals in Group A. Default returns: title, abstract and Creation Time
+   *
+   * @param {object} data Request data.
+   *
+   *  - `fields` – `{object}` - Define the fields to search by, these will be mapped to the Proposal object and ensure the fields exist. There is also support for a `text` search to look for keywords. Can be undefined.
+   *
+   *  - `facets` – `{any}` - This should be an array of objects with the structure: {name: key in mongo (without $ prefix), type: date|text|etc, preConditions: object to include in the query (i.e. unwind)}
+   *
+   * @returns {object} An empty reference that will be
+   *   populated with the actual data once the response is returned
+   *   from the server.
+   *
+   * Data properties:
+   *
+   *  - `results` – `{Object}` -
+   */
+  public facet(fields: any = {}, facets: any = {}, customHeaders?: Function): Observable<any> {
+    let _method: string = "POST";
+    let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
+      "/Proposals/facet";
+    let _routeParams: any = {};
+    let _postBody: any = {};
+    let _urlParams: any = {};
+    if (typeof fields !== 'undefined' && fields !== null) _urlParams.fields = fields;
+    if (typeof facets !== 'undefined' && facets !== null) _urlParams.facets = facets;
+    let result = this.request(_method, _url, _routeParams, _urlParams, _postBody, null, customHeaders);
+    return result;
+  }
+
+
 }

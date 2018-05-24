@@ -36,16 +36,6 @@ import {AppState} from "../state/app.store";
 
 @Injectable()
 export class ProposalsEffects {
-	/*@Effect() getProposals$: Observable<FetchProposalsOutcomeAction> = this.actions$.pipe(
-		ofType<FetchProposalsAction>(FETCH_PROPOSALS),
-		mergeMap(action =>
-			this.proposalsService.getProposals().pipe(
-				map(proposals => new FetchProposalsCompleteAction(proposals)),
-				catchError(() => Observable.of(new FetchProposalsFailedAction()))
-			)
-		)
-	);*/
-
 
   @Effect() getProposals$: Observable<FetchProposalsOutcomeAction> =
     this.actions$.ofType(FETCH_PROPOSALS)
@@ -55,7 +45,7 @@ export class ProposalsEffects {
       const limits= {};
       limits['limit'] = payload['limit'] ? payload['limit'] : 30;
       limits['skip'] = payload['skip'] ? payload['skip'] : 0;
-      limits['order'] = payload['sortField'] ? payload['sortField'] : "createdAt:desc";
+      limits['order'] = payload['sortField'] ? payload['sortField'] : "createdAt desc";
       // remove fields not relevant for facet filters
       // TODO understand what defines the structure of the payload.
       // TODO What is the meaning of "initial"
@@ -84,37 +74,6 @@ export class ProposalsEffects {
     )
   );
 
-  /*@Effect() getFilteredProposals$: Observable<FetchProposalsOutcomeAction> = this.actions$.pipe(
-    ofType<FetchProposalsAction>(FETCH_PROPOSALS),
-    mergeMap(action =>
-      this.proposalsService.getFilteredProposals().pipe(
-        map(proposals => new FetchProposalsCompleteAction(proposals)),
-        catchError(() => Observable.of(new FetchProposalsFailedAction()))
-      )
-    )
-  );*/
-
-
-  /*@Effect()
-  protected fetchFilteredProposals$: Observable<Action> =
-    this.actions$.ofType(FILTER_PROPOSALS_UPDATE)
-      .map((action: UpdateProposalFilterAction) => action.payload)
-      .switchMap(payload => {
-        const filter = {};
-        const fq = Object.assign({}, payload);
-        filter['limit'] = fq['limit'] ? fq['limit'] : 30;
-        return this.proposalsService
-            .searchProposalsObservable(filter)
-            .switchMap(res => {
-              console.log(res);
-              return Observable.of(new SearchProposalCompleteAction(res));
-            })
-            .catch(err => {
-              console.log(err);
-              return Observable.of(new FetchProposalsFailedAction());
-            });
-        }
-      );*/
   @Effect()
   protected facetProposalCount$: Observable<Action> =
     this.actions$.ofType(FILTER_PROPOSALS_UPDATE)
@@ -127,37 +86,27 @@ export class ProposalsEffects {
           .catch(err => Observable.of(new SearchProposalsFailedAction(err)))
       );
 
-  /*@Effect()
-  protected facetProposals$: Observable<Action> =
+  @Effect()
+  protected facet$: Observable<Action> =
     this.actions$.ofType(FILTER_PROPOSALS_UPDATE)
       .debounceTime(300)
       .map((action: UpdateProposalFilterAction) => action.payload)
       .switchMap(payload => {
-        const limits= {};
-        limits['limit'] = payload['limit'] ? payload['limit'] : 30;
-        limits['skip'] = payload['skip'] ? payload['skip'] : 0;
-        limits['order'] = payload['sortField'] ? payload['sortField'] : "createdAt:desc";
-        // remove fields not relevant for facet filters
-        // TODO understand what defines the structure of the payload.
-        // TODO What is the meaning of "initial"
-        const fq={}
-        Object.keys(payload).forEach(key => {
-          // console.log("======key,payload[key]",key,payload[key])
-          if (['initial','sortField','skip','limit'].indexOf(key)>=0)return
-          if (payload[key] === null) return
-          if (typeof payload[key] === 'undefined' || payload[key].length == 0) return
-          fq[key]=payload[key]
-        })
-        return this.ps.fullquery (limits)
+        const fq = handleFacetPayload(payload, false);
+        const facetObject = [{ name: 'keywords', type: 'text', preConditions: { $unwind: '$keywords' } }, { name: 'type', type: 'text'}];
+        return this.ps
+          .facet(JSON.stringify(fq), facetObject)
           .switchMap(res => {
-            console.log(res);
-            return Observable.of(new FetchProposalsCompleteAction(res as Proposal[]));
+            const filterValues = res['results'][0];
+            const fv = {};
+            fv['years'] = filterValues['years'];
+            return Observable.of(new UpdateProposalFilterAction(fv));
           })
           .catch(err => {
             console.log(err);
             return Observable.of(new FetchProposalsFailedAction());
           });
-      });*/
+      });
 
   @Effect()
   protected facetProposals$: Observable<Action> =
@@ -267,9 +216,9 @@ function handleFacetPayload(fq, loopback = false) {
       switch (key) {
         case 'text':
           if (loopback) {
-            match.push({'$title': {'search': '"' + facet + '"', 'language': 'none'}});
+            match.push({'$text': {'search': '"' + facet + '"', 'language': 'none'}});
           } else {
-            match['$title'] = facet;
+            match['$text'] = facet;
           }
           break;
         default:
