@@ -10,7 +10,6 @@ import { ProposalDetailComponent } from './components/proposal-detail/proposal-d
 
 import { ListProposalsPageComponent } from './containers/list-proposals-page/list-proposals-page.component';
 import { ViewProposalPageComponent } from './containers/view-proposal-page/view-proposal-page.component';
-//import {ProposalsFilterComponent} from './components/proposals-filter/proposals-filter.component';
 
 import {ProposalTableComponent} from '../proposals/proposal-table/proposal-table.component';
 
@@ -66,7 +65,6 @@ import {ProposalTablePureComponent} from "./proposal-table-pure/proposal-table-p
         ProposalTablePureComponent,
         ProposalsListComponent,
         ProposalDetailComponent,
-      //ProposalsFilterComponent,
     ],
     providers: [
         ProposalsService,
