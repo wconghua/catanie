@@ -1,12 +1,5 @@
 import { Action } from '@ngrx/store';
 import { Proposal, Dataset } from '../models';
-import {
-  FILTER_UPDATE,
-  FILTER_UPDATE_COMPLETE,
-  FILTER_VALUE_UPDATE,
-  SEARCH_COMPLETE,
-  TOTAL_UPDATE
-} from "./datasets.actions";
 
 export const SELECT_PROPOSAL			= '[Proposals] Select Proposal';
 
@@ -87,19 +80,11 @@ export class UpdateProposalFilterAction implements Action {
   constructor(public payload: any) {}
 }
 
-export class UpdateProposalFilterCompleteAction implements Action {
-  readonly type = FILTER_UPDATE_COMPLETE;
-  constructor(public payload: any) {}
-}
 
 export class UpdateProposalFilterFailedAction implements Action {
   type = FILTER_PROPOSALS_UPDATE_FAILED;
 }
 
-export class FilterProposalValueAction implements Action {
-  readonly type = FILTER_PROPOSALS_VALUE_UPDATE;
-  constructor(public payload?: any) {}
-}
 
 export class SearchProposalCompleteAction implements Action {
   readonly type = SEARCH_PROPOSALS_COMPLETE;
@@ -125,7 +110,6 @@ export class SearchProposalsFailedAction implements Action {
   readonly type = SEARCH_PROPOSALS_FAILED;
   constructor(public payload: any) {}
 }
-
 
 
 export type FetchProposalsOutcomeAction =

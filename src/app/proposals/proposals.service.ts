@@ -29,6 +29,11 @@ export class ProposalsService {
 		return this.proposalApi.findOne({where: {proposalId}});
 	}
 
+	getProposalBySearchText(searchText: string): Observable<Proposal[]> {
+	  const query  ={"where": {"title":{"like": "%" +searchText +"%"}}};
+	  return this.proposalApi.find(query);
+  }
+
 	getDatasetsForProposal(proposalId: string): Observable<Dataset[]> {
 		return this.datasetApi.find({where: {proposalId}});
 	}

@@ -1,6 +1,5 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { ProposalsState } from '../state/proposals.store';
-import * as lb from "../../shared/sdk/models";
 
 
 const getProposalsState = createFeatureSelector<ProposalsState>('proposals');
@@ -59,16 +58,8 @@ export const getFilteredProposalList = createSelector(
   proposals => Object.keys(proposals).map(id => proposals[id])
 );
 
-// Hannes code
-const getProposalState = createFeatureSelector<ProposalsState>('proposals');
-
-export const getProposals2 = createSelector(
-  getProposalState,
-  state => state.proposals
-);
-
 export const getPage = createSelector(
-  getProposalState,
+  getProposalsState,
   state => state.currentPage3
 );
 

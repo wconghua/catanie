@@ -1,4 +1,3 @@
-import { Action, ActionReducer } from '@ngrx/store';
 import { ProposalsState, initialProposalsState } from '../state/proposals.store';
 
 import {
@@ -12,8 +11,6 @@ import {
 } from '../actions/proposals.actions';
 
 import { LogoutCompleteAction, LOGOUT_COMPLETE } from '../actions/user.actions';
-import {getSelectedProposalId} from "../selectors/proposals.selectors";
-import {FILTER_UPDATE, FILTER_UPDATE_COMPLETE, FILTER_VALUE_UPDATE, TOTAL_UPDATE} from "../actions/datasets.actions";
 
 export function proposalsReducer(
     state: ProposalsState = initialProposalsState,

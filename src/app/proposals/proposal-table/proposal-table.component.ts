@@ -1,54 +1,25 @@
-import { DatePipe } from '@angular/common';
 import {
   Component,
   EventEmitter,
   Input,
   OnInit,
   Output,
-  ViewChild,
   OnDestroy,
 } from '@angular/core';
 
 import { Router, ActivatedRoute, Data } from '@angular/router';
-import { Store, select } from '@ngrx/store';
-import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
-import { SelectionModel } from '@angular/cdk/collections';
-
-import { Subject } from 'rxjs/Subject';
+import { Store } from '@ngrx/store';
+import { MatSort, MatDialog } from '@angular/material';
 
 import { Proposal } from 'shared/sdk/models';
 import { ConfigService } from 'shared/services/config.service';
-import { DialogComponent } from 'shared/modules/dialog/dialog.component';
-import * as utils from 'shared/utils';
-import { config } from '../../../config/config';
 
 import * as psa from 'state-management/actions/proposals.actions';
-import * as selectors from 'state-management/selectors';
-import * as ua from 'state-management/actions/user.actions';
-import * as ja from 'state-management/actions/jobs.actions';
-import { getProposals2, getPage } from 'state-management/selectors/proposals.selectors';
-import { Message, MessageType } from 'state-management/models';
-
-import { Angular5Csv } from 'angular5-csv/Angular5-csv';
-
-import { last } from 'rxjs/operator/last';
 import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { startWith } from 'rxjs/operator/startWith';
-import { take } from 'rxjs/operator/take';
 
 import { PageChangeEvent, SortChangeEvent } from '../proposal-table-pure/proposal-table-pure.component';
 
-import * as rison from 'rison';
-import { Subscription } from 'rxjs';
-import {
-  FetchProposalsAction,
-  TotalProposalsAction,
-  UpdateProposalFilterAction
-} from "../../state-management/actions/proposals.actions";
-import * as pStore from "../../state-management/state/proposals.store";
 import {AfterViewInit} from "@angular/core/src/metadata/lifecycle_hooks";
-import * as dsa from "../../state-management/actions/datasets.actions";
 
 @Component({
   selector: 'proposal-table',
@@ -56,10 +27,8 @@ import * as dsa from "../../state-management/actions/datasets.actions";
   styleUrls: ['./proposal-table.component.scss']
 })
 export class ProposalTableComponent implements OnInit, OnDestroy, AfterViewInit {
-  //@Input() private proposals = [];
   @Output() private openProposal = new EventEmitter();
 
-  //@Input() private proposals$: Observable<Proposal[]>;
   @Input() private proposals$: Observable<Proposal[]>;
   @Input() private currentPage: Observable<number>;
   @Input() private proposalCount$: Observable<number>;

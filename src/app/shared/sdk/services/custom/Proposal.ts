@@ -430,19 +430,6 @@ export class ProposalApi extends BaseLoopBackApi {
     return "Proposal";
   }
 
-  public fullquery(fields: any = {}, limits: any = {}, customHeaders?: Function): Observable<any> {
-    let _method: string = "GET";
-    let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-      "/Proposals/fullquery";
-    let _routeParams: any = {};
-    let _postBody: any = {};
-    let _urlParams: any = {};
-    if (typeof fields !== 'undefined' && fields !== null) _urlParams.fields = fields;
-    if (typeof limits !== 'undefined' && limits !== null) _urlParams.limits = limits;
-    let result = this.request(_method, _url, _routeParams, _urlParams, _postBody, null, customHeaders);
-    return result;
-  }
-
   /**
    * Search for numbers associated with proposals properties. I.e. How many proposals in Group A. Default returns: title, abstract and Creation Time
    *
@@ -472,6 +459,5 @@ export class ProposalApi extends BaseLoopBackApi {
     let result = this.request(_method, _url, _routeParams, _urlParams, _postBody, null, customHeaders);
     return result;
   }
-
 
 }

@@ -21,22 +21,14 @@ export const initialProposalsState: ProposalsState = {
     text: null,
     creationTime: null,
     title: null,
-    //abstract: null,
-    //creationLocation: [],
-    //ownerGroup: [],
     skip: 0,
     initial: true,
     sortField: 'createdAt desc',
-    //keywords: []
   },
   filterValues: {
     creationTime: {start: null, end: null},
-    //creationLocation: [],
-    //ownerGroup: [],
     text: null,
     title: null,
-    //abstract: null,
-    //keywords: []
   },
 	hasFetched: false,
 	selectedId: null,
