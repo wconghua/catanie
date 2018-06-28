@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
-import { ProposalsListComponent } from './components/proposals-list/proposals-list.component';
+//import { ProposalsListComponent } from './components/proposals-list/proposals-list.component';
 import { ProposalDetailComponent } from './components/proposal-detail/proposal-detail.component';
 
 import { ListProposalsPageComponent } from './containers/list-proposals-page/list-proposals-page.component';
@@ -63,7 +63,7 @@ import {ProposalTablePureComponent} from "./proposal-table-pure/proposal-table-p
 
         ProposalTableComponent,
         ProposalTablePureComponent,
-        ProposalsListComponent,
+        /*ProposalsListComponent,*/
         ProposalDetailComponent,
     ],
     providers: [
