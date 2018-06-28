@@ -61,7 +61,7 @@ export const getRectangularRepresentation = createSelector(
         const empty = Object
             .keys(merged)
             .reduce((empty, key) => ({[key]: '', ...empty}), {});
-            
+
         return datasets
             /*.map(dataset => Object -- Isn't this part taken care of by the CSV library?
                 .keys(dataset)
@@ -161,13 +161,13 @@ function restrictFilter(filter: object, allowedKeys?: string[]) {
       const hasLength = typeof value === 'string' || Array.isArray(value);
       return value == null || hasLength && value.length === 0;
     }
-  
+
     const keys = allowedKeys || Object.keys(filter);
     return keys.reduce((obj, key) => {
       const val = filter[key];
       return isNully(val) ? obj : {...obj, [key]: val};
     }, {});
-}  
+}
 
 export const getFullqueryParams = createSelector(
     getFilters,
@@ -175,7 +175,7 @@ export const getFullqueryParams = createSelector(
         const {skip, limit, sortField, mode, ...theRest} = filter;
         const limits = {skip, limit, order: sortField};
         const query = restrictFilter(theRest);
-  
+
         // Archiving handling
         if (mode !== 'view') {
             query['archiveStatusMessage'] = {
@@ -183,14 +183,14 @@ export const getFullqueryParams = createSelector(
                 retrieve: config.retrieveable,
             }[mode];
         }
-        
+
         return {
             query: JSON.stringify(query),
             limits
         };
     }
 );
-  
+
 export const getFullfacetsParams = createSelector(
     getFilters,
     filter => {
@@ -224,3 +224,5 @@ export const getHasPrefilledFilters = createSelector(
     getDatasetState,
     state => state.hasPrefilledFilters
 );
+export const getCurrentSet = (state: any) => state.root.datasets.currentSet;
+

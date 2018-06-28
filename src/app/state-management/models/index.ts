@@ -36,3 +36,15 @@ export interface DatasetFilters {
   sortField: string,
   mode: ViewMode,
 };
+
+export interface ProposalFilters {
+  text: string;
+  //ownerGroup: string[];
+  title: string;
+  //abstract: string;
+  creationTime: {'start': Date, 'end': Date};
+  //creationLocation: string[];
+  skip: number;
+  initial: boolean;
+  //keywords: string[];
+};

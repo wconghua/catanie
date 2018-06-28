@@ -14,6 +14,19 @@ export const FETCH_PROPOSAL_FAILED      = '[Proposals] Get Proposal Failed';
 export const FETCH_DATASETS_FOR_PROPOSAL            = '[Proposals] Fetch Datasets for Proposal';
 export const FETCH_DATASETS_FOR_PROPOSAL_COMPLETE   = '[Proposals] Fetch Datasets for Proposal Complete';
 export const FETCH_DATASETS_FOR_PROPOSAL_FAILED     = '[Proposals] Fetch Datasets for Proposal Failed';
+export const FILTER_PROPOSALS_UPDATE =                '[Proposals] Filter Update';
+export const FILTER_PROPOSALS_UPDATE_FAILED =                '[Proposals] Filter Update Failed';
+export const FILTER_PROPOSALS_VALUE_UPDATE =                '[Proposals] Filter Value Update';
+export const FILTER_PROPOSALS_UPDATE_COMPLETE =                '[Proposals] Filter Update Complete';
+
+export const SEARCH_PROPOSALS_COMPLETE =                '[Proposals] Search Proposals Complete';
+export const SEARCH_PROPOSALS_FAILED=                '[Proposals] Search Proposals Failed';
+
+export const TOTAL_PROPOSALS_UPDATE =    '[Proposals] Total Proposals Update';
+
+export const GO_TO_PAGE =                   '[Proposal] Go to Page';
+export const SORT_BY_COLUMN =               '[Proposal] Sort by Column';
+
 
 export class SelectProposalAction implements Action {
     type = SELECT_PROPOSAL;
@@ -22,6 +35,7 @@ export class SelectProposalAction implements Action {
 
 export class FetchProposalsAction implements Action {
     type = FETCH_PROPOSALS;
+    constructor(public payload: any) {}
 }
 
 export class FetchProposalsCompleteAction implements Action {
@@ -61,10 +75,47 @@ export class FetchDatasetsForProposalFailedAction implements Action {
     type = FETCH_DATASETS_FOR_PROPOSAL_FAILED;
 }
 
+export class UpdateProposalFilterAction implements Action {
+  readonly type = FILTER_PROPOSALS_UPDATE;
+  constructor(public payload: any) {}
+}
+
+
+export class UpdateProposalFilterFailedAction implements Action {
+  type = FILTER_PROPOSALS_UPDATE_FAILED;
+}
+
+
+export class SearchProposalCompleteAction implements Action {
+  readonly type = SEARCH_PROPOSALS_COMPLETE;
+  constructor(public payload: {}[]) {}
+}
+
+export class TotalProposalsAction implements Action {
+  readonly type = TOTAL_PROPOSALS_UPDATE;
+  constructor(public payload: number) {}
+}
+
+export class GoToPageAction implements Action {
+  readonly type = GO_TO_PAGE;
+  constructor(readonly page: number) {}
+}
+
+export class SortByColumnAction implements Action {
+  readonly type = SORT_BY_COLUMN;
+  constructor(readonly column: string, readonly direction: string) {}
+}
+
+export class SearchProposalsFailedAction implements Action {
+  readonly type = SEARCH_PROPOSALS_FAILED;
+  constructor(public payload: any) {}
+}
+
+
 export type FetchProposalsOutcomeAction =
 	FetchProposalsCompleteAction |
     FetchProposalsFailedAction;
-    
+
 export type FetchProposalOutcomeAction =
     FetchProposalCompleteAction |
     FetchProposalFailedAction;
@@ -73,8 +124,10 @@ export type FetchDatasetsForProposalOutcomeAction =
     FetchDatasetsForProposalCompleteAction |
     FetchDatasetsForProposalFailedAction;
 
-export type ProposalsAction = 
+export type ProposalsAction =
     SelectProposalAction |
     FetchProposalsAction | FetchProposalsOutcomeAction |
     FetchProposalAction | FetchProposalOutcomeAction |
-    FetchDatasetsForProposalAction | FetchDatasetsForProposalOutcomeAction;
+    FetchDatasetsForProposalAction | FetchDatasetsForProposalOutcomeAction |
+    SearchProposalCompleteAction | UpdateProposalFilterAction | UpdateProposalFilterFailedAction |
+    TotalProposalsAction | GoToPageAction | SortByColumnAction | SearchProposalsFailedAction;

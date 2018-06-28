@@ -1,39 +1,66 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import { Store, select } from '@ngrx/store';
+
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+
 import { AppState } from 'state-management/state/app.store';
+
 import { Proposal } from 'state-management/models';
-import { getProposalList, getHasFetched } from 'state-management/selectors/proposals.selectors';
-import { FetchProposalsAction } from 'state-management/actions/proposals.actions';
+import { UpdateProposalFilterAction } from 'state-management/actions/proposals.actions';
+
+
+import {MatSort} from "@angular/material";
+
+import {getPage, getProposals, getActiveFilters, getTotalSets, getLoading, getText} from "../../../state-management/selectors/proposals.selectors";
 
 @Component({
-    selector: 'list-proposals-page',
-    template: `
-        <proposals-list [proposals]="proposals$ | async">
-        </proposals-list>
-    `
+  selector: 'list-proposals-page',
+  template: `
+    <proposal-table [proposals$]="proposals$"
+                    [currentPage]="currentPage$"
+                    [limit]="limit$"
+                    [loading]="loading$"
+                    [proposalCount$]="proposalCount$"
+                    [searchText$]="searchText$"
+                    [matSort]="matSort">
+    </proposal-table>
+  `
 })
 export class ListProposalsPageComponent implements OnInit, OnDestroy {
-    private subscription: Subscription;
-    private proposals$: Observable<Proposal[]>;
-    private hasFetched$: Observable<boolean>;
+  private subscription: Subscription;
+  private proposals$: Observable<Proposal[]>;
+  subscriptions = [];
+  private limit$: Observable<number>;
+  private currentPage$: Observable<number>;
+  private proposalCount$: Observable<number>;
+  private loading$: Observable<boolean>;
+  private activeFilter$: Observable<object>;
+  @ViewChild(MatSort) matSort: MatSort;
+  searchText$;
 
-    constructor(private store: Store<AppState>) {}
+  constructor(
+    private store: Store<AppState>
 
-    ngOnInit() {
-        this.proposals$ = this.store.pipe(select(getProposalList));
-        this.hasFetched$ = this.store.pipe(select(getHasFetched));
+  )
+  {
+    this.proposalCount$ = this.store.select(getTotalSets);
+    this.loading$ = this.store.select(getLoading);
+  }
 
-        this.subscription = this.hasFetched$.pipe(
-            distinctUntilChanged(),
-            map(() => new FetchProposalsAction())
-        )
-        .subscribe(this.store);
-    }
+  ngOnInit() {
+    this.activeFilter$ = this.store.select(getActiveFilters);
+    this.proposals$ = this.store.pipe(select(getProposals));
+    this.currentPage$ = this.store.pipe(select(getPage));
+    this.limit$ = this.store.select(state => state.proposals.totalProposals);
+    this.searchText$ = this.store.select(getText);
 
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
-    }
+    this.subscription = this.activeFilter$.subscribe(filter => {
+      this.store.dispatch(new UpdateProposalFilterAction(filter));
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 };

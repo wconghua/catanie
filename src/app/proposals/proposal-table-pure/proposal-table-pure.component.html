@@ -1,0 +1,65 @@
+<div>
+  <mat-paginator
+    class="dataset-paginator"
+    [pageSize]="30"
+    [pageIndex]="currentPage"
+    [length]="totalNumber"
+    (page)="handlePageChange($event)">
+  </mat-paginator>
+
+  <mat-table
+    [dataSource]="proposals"
+    class="dataset-table"
+    matSort (matSortChange)="handleSortChange($event)">
+
+    <!--<ng-container matColumnDef="select">
+      <mat-header-cell *matHeaderCellDef>
+        </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+      </mat-cell>
+    </ng-container>-->
+
+    <!-- Column Definitions -->
+    <ng-container matColumnDef="proposalId">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Proposal ID</mat-header-cell>
+      <mat-cell *matCellDef="let proposal">{{proposal.proposalId}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="title">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Title</mat-header-cell>
+      <mat-cell *matCellDef="let proposal">{{proposal.title}}</mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="abstract">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Abstract</mat-header-cell>
+      <mat-cell *matCellDef="let proposal">{{proposal.abstract}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="createdAt">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Creation Time</mat-header-cell>
+      <mat-cell *matCellDef="let proposal">
+        {{proposal.createdAt | date: 'dd/MM/yyyy HH:mm'}}
+      </mat-cell>
+    </ng-container>
+
+
+    <!-- End of Column Definitions -->
+
+    <mat-header-row class='datasets-header' *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row
+      class='row-generic'
+      *matRowDef="let proposal; columns: displayedColumns;"
+      (click)="handleClick(proposal)"
+      [ngClass]="getRowClass(proposal)">
+    </mat-row>
+  </mat-table>
+
+  <mat-paginator
+    class="dataset-paginator"
+    [pageSize]="30"
+    [pageIndex]="currentPage"
+    [length]="totalNumber"
+    (page)="handlePageChange($event)">
+  </mat-paginator>
+</div>

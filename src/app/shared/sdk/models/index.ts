@@ -18,3 +18,4 @@ export * from './DatasetAttachment';
 export * from './OrigDatablock';
 export * from './BaseModels';
 export * from './FireLoopRef';
+export * from './Proposal';

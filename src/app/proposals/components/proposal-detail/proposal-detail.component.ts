@@ -57,6 +57,7 @@ export class ProposalDetailComponent implements OnInit {
             email: piEmail,
             isPresent: piFullName !== null || piEmail !== null
         };
+
     }
 
     calculateRowClasses(row: Dataset) {

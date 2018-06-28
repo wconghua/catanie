@@ -1,12 +1,23 @@
-<mat-nav-list *ngIf="proposals && proposals.length > 0">
-  <mat-list>
-    <!-- <h3 mat-subheader>Proposals</h3> -->
-    <mat-list-item *ngFor="let proposal of proposals" [routerLink]="['/proposals/', proposal.proposalId]">
-      <h4 mat-line>{{proposal.title}}</h4>
-      <p mat-line>{{proposal.abstract}}</p>
-    </mat-list-item>
-  </mat-list>
-</mat-nav-list>
-<div *ngIf="proposals && proposals.length === 0">
-  {{ hasFetched ? "No proposals." : "Loading..." }}
-</div>
+
+  <div>
+  <mat-table #table [dataSource]="dataSource" class='dataset-table'>
+      <ng-container matColumnDef="proposalId">
+        <mat-header-cell *matHeaderCellDef>Proposal ID</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.proposalId}}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="title">
+        <mat-header-cell *matHeaderCellDef>Title</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.title}}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="abstract">
+        <mat-header-cell *matHeaderCellDef>Abstract</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.abstract}}</mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row class='row-generic' (click)="onRowSelect($event, row)" *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </div>
+
+  <mat-paginator class='dataset-paginator' [pageSize]="limit2" [pageSizeOptions]="[10,30, 50, 100]" [length]="proposalsCount" (page)="onPage($event)"></mat-paginator>
+  <!--<mat-paginator class='dataset-paginator' [pageSize]="limit$ | async" [pageSizeOptions]="[10,30, 50, 100]" [length]="proposalsCount$ | async" (page)="onPage($event)"></mat-paginator>-->
+

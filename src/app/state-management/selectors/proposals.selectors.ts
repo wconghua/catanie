@@ -1,10 +1,10 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { ProposalsState } from '../state/proposals.store';
-//import { getDatasets } from './datasets.selectors';
+
 
 const getProposalsState = createFeatureSelector<ProposalsState>('proposals');
 
-const getProposals = createSelector(
+export const getProposals = createSelector(
 	getProposalsState,
 	state => state.proposals
 );
@@ -45,3 +45,29 @@ export const getSelectedProposalDatasets = createSelector(
 	getSelectedProposalId,
 	(datasets, proposalId) => datasets.filter(dataset => dataset.proposalId === proposalId)
 );
+
+export const getTotalProposals = (state: any) => state.totalProposals;
+
+const getFilteredProposals = createSelector(
+  getProposals,
+  proposals => Object.keys(proposals).map(id => proposals[id])
+);
+
+export const getFilteredProposalList = createSelector(
+  getFilteredProposals,
+  proposals => Object.keys(proposals).map(id => proposals[id])
+);
+
+export const getPage = createSelector(
+  getProposalsState,
+  state => state.currentPage3
+);
+
+export const getLoading = (state: any) => state.proposals.loading;
+export const getTotalSets = (state: any) => state.proposals.totalProposals;
+export const getFilterValues = (state: any) => state.proposals.filterValues;
+export const getActiveFilters = (state: any) => state.proposals.activeFilters;
+
+export const getText = (state: any) => state.proposals.activeFilters.text;
+
+

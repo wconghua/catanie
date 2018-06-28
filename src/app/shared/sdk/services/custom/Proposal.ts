@@ -133,7 +133,7 @@ export class ProposalApi extends BaseLoopBackApi {
    *
    * @param {any} id Proposal id
    *
-   * @param {object} filter 
+   * @param {object} filter
    *
    * @returns {object[]} An empty reference that will be
    *   populated with the actual data once the response is returned
@@ -228,7 +228,7 @@ export class ProposalApi extends BaseLoopBackApi {
    *
    * Data properties:
    *
-   *  - `count` – `{number}` - 
+   *  - `count` – `{number}` -
    */
   public countMeasurementPeriods(id: any, where: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "GET";
@@ -338,11 +338,11 @@ export class ProposalApi extends BaseLoopBackApi {
   /**
    * Find proposal that took data at specified instrument and time
    *
-   * @param {string} instrument 
+   * @param {string} instrument
    *
-   * @param {date} measureTime 
+   * @param {date} measureTime
    *
-   * @param {object} options 
+   * @param {object} options
    *
    * @returns {object} An empty reference that will be
    *   populated with the actual data once the response is returned
@@ -350,7 +350,7 @@ export class ProposalApi extends BaseLoopBackApi {
    *
    * Data properties:
    *
-   *  - `findByInstrumentAndDate` – `{Object}` - 
+   *  - `findByInstrumentAndDate` – `{Object}` -
    */
   public findByInstrumentAndDate(instrument: any = {}, measureTime: any = {}, customHeaders?: Function): Observable<Proposal> {
     let _method: string = "GET";
@@ -368,7 +368,7 @@ export class ProposalApi extends BaseLoopBackApi {
   /**
    * Search text inside proposal
    *
-   * @param {object} options 
+   * @param {object} options
    *
    * @returns {object} An empty reference that will be
    *   populated with the actual data once the response is returned
@@ -376,7 +376,7 @@ export class ProposalApi extends BaseLoopBackApi {
    *
    * Data properties:
    *
-   *  - `searchText` – `{Object}` - 
+   *  - `searchText` – `{Object}` -
    */
   public searchText(customHeaders?: Function): Observable<any> {
     let _method: string = "GET";
@@ -429,4 +429,35 @@ export class ProposalApi extends BaseLoopBackApi {
   public getModelName() {
     return "Proposal";
   }
+
+  /**
+   * Search for numbers associated with proposals properties. I.e. How many proposals in Group A. Default returns: title, abstract and Creation Time
+   *
+   * @param {object} data Request data.
+   *
+   *  - `fields` – `{object}` - Define the fields to search by, these will be mapped to the Proposal object and ensure the fields exist. There is also support for a `text` search to look for keywords. Can be undefined.
+   *
+   *  - `facets` – `{any}` - This should be an array of objects with the structure: {name: key in mongo (without $ prefix), type: date|text|etc, preConditions: object to include in the query (i.e. unwind)}
+   *
+   * @returns {object} An empty reference that will be
+   *   populated with the actual data once the response is returned
+   *   from the server.
+   *
+   * Data properties:
+   *
+   *  - `results` – `{Object}` -
+   */
+  public facet(fields: any = {}, facets: any = {}, customHeaders?: Function): Observable<any> {
+    let _method: string = "POST";
+    let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
+      "/Proposals/facet";
+    let _routeParams: any = {};
+    let _postBody: any = {};
+    let _urlParams: any = {};
+    if (typeof fields !== 'undefined' && fields !== null) _urlParams.fields = fields;
+    if (typeof facets !== 'undefined' && facets !== null) _urlParams.facets = facets;
+    let result = this.request(_method, _url, _routeParams, _urlParams, _postBody, null, customHeaders);
+    return result;
+  }
+
 }
