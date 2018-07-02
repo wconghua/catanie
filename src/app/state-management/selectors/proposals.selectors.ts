@@ -43,7 +43,7 @@ export const getSelectedProposal = createSelector(
 export const getSelectedProposalDatasets = createSelector(
 	getDatasetList,
 	getSelectedProposalId,
-	(datasets, proposalId) => datasets.filter(dataset => dataset.proposalId === proposalId)
+	(datasets, proposalId) => datasets.filter(dataset => dataset.pid === proposalId)
 );
 
 export const getTotalProposals = (state: any) => state.totalProposals;

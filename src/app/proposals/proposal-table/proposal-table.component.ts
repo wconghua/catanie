@@ -63,7 +63,7 @@ export class ProposalTableComponent implements OnInit, OnDestroy, AfterViewInit 
 
   onClick(proposal: Proposal): void {
     const proposalId = encodeURIComponent(proposal.proposalId);
-    this.router.navigateByUrl('/proposal/' + proposalId);
+    this.router.navigateByUrl('/proposals/' + proposalId);
   }
 
   onPageChange(event: PageChangeEvent): void {

@@ -2,11 +2,15 @@ import { Injectable } from '@angular/core';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 
-import { Observable } from 'rxjs/Observable';
-import { map, mergeMap, take, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, switchMap, mergeMap, take, catchError } from 'rxjs/operators';
 import * as lb from 'shared/sdk/services';
 import { ProposalsService } from 'proposals/proposals.service';
 import 'rxjs/add/operator/withLatestFrom';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/mergeMap';
 
 import {
 
