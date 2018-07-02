@@ -10,7 +10,7 @@ import {
     FetchDatasetsForProposalAction
 } from 'state-management/actions/proposals.actions';
 import {
-    getSelectedProposal,
+    getCurrentProposal,
     getSelectedProposalDatasets
 } from 'state-management/selectors/proposals.selectors';
 import { AppState } from 'state-management/state/app.store';
@@ -53,8 +53,8 @@ export class ViewProposalPageComponent implements OnInit, OnDestroy {
                 ])
             )
             .subscribe(this.store);
-            
-        this.proposal$ = this.store.pipe(select(getSelectedProposal));
+
+        this.proposal$ = this.store.pipe(select(getCurrentProposal));
         this.datasets$ = this.store.pipe(select(getSelectedProposalDatasets));
     }
 

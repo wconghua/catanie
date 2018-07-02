@@ -25,8 +25,9 @@ export function proposalsReducer(
         }
         case FETCH_PROPOSAL_COMPLETE: {
             const proposal = (action as FetchProposalCompleteAction).proposal;
-            const proposals = {...state.proposals, [proposal.proposalId]: proposal};
-            return {...state, proposals};
+            /*const proposals = {...state.proposals, [proposal.proposalId]: proposal};*/
+            const proposals = (action as FetchProposalsCompleteAction).proposals;
+            return {...state, proposals, currentProposal:proposal};
         }
         case FETCH_DATASETS_FOR_PROPOSAL_COMPLETE: {
             const list = (action as FetchDatasetsForProposalCompleteAction).datasets;

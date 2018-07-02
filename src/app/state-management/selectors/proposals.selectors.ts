@@ -19,16 +19,6 @@ const getDatasetList = createSelector(
 	datasets => Object.keys(datasets).map(id => datasets[id])
 );
 
-export const getHasFetched = createSelector(
-	getProposalsState,
-	state => state.hasFetched
-);
-
-export const getProposalList = createSelector(
-	getProposals,
-	proposals => Object.keys(proposals).map(id => proposals[id])
-);
-
 export const getSelectedProposalId = createSelector(
 	getProposalsState,
 	state => state.selectedId
@@ -40,22 +30,15 @@ export const getSelectedProposal = createSelector(
 	(proposals, selectedId) => proposals[selectedId] || null
 );
 
+export const getCurrentProposal = createSelector(
+  getProposalsState,
+  state => state.currentProposal
+);
+
 export const getSelectedProposalDatasets = createSelector(
 	getDatasetList,
 	getSelectedProposalId,
 	(datasets, proposalId) => datasets.filter(dataset => dataset.pid === proposalId)
-);
-
-export const getTotalProposals = (state: any) => state.totalProposals;
-
-const getFilteredProposals = createSelector(
-  getProposals,
-  proposals => Object.keys(proposals).map(id => proposals[id])
-);
-
-export const getFilteredProposalList = createSelector(
-  getFilteredProposals,
-  proposals => Object.keys(proposals).map(id => proposals[id])
 );
 
 export const getPage = createSelector(
@@ -69,5 +52,7 @@ export const getFilterValues = (state: any) => state.proposals.filterValues;
 export const getActiveFilters = (state: any) => state.proposals.activeFilters;
 
 export const getText = (state: any) => state.proposals.activeFilters.text;
+
+
 
 

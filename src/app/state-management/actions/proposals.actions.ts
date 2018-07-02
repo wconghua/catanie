@@ -5,7 +5,7 @@ export const SELECT_PROPOSAL			= '[Proposals] Select Proposal';
 
 export const FETCH_PROPOSALS    		= '[Proposals] Get Proposals';
 export const FETCH_PROPOSALS_COMPLETE 	= '[Proposals] Get Proposals Complete';
-export const FETCH_PROPOSALS_FAILED		= '[Proposals] Get Proposals Failed'
+export const FETCH_PROPOSALS_FAILED		= '[Proposals] Get Proposals Failed';
 
 export const FETCH_PROPOSAL             = '[Proposals] Get Proposal';
 export const FETCH_PROPOSAL_COMPLETE    = '[Proposals] Get Proposal Complete';

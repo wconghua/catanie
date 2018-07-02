@@ -38,9 +38,4 @@ export class ProposalsService {
 		return this.datasetApi.find({where: {proposalId}});
 	}
 
-  getFilteredProposals(terms: object = this.filter): Observable<Proposal[]> {
-    const filter = Object.assign(this.filter, terms);
-    return this.proposalApi.find(filter);
-  }
-
 }

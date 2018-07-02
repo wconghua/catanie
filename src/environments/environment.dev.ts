@@ -5,7 +5,8 @@
 
 export const environment = {
   production: false,
-  lbBaseURL: 'http://127.0.0.1:3000',
+  //lbBaseURL: 'http://127.0.0.1:3000',
+  lbBaseURL: 'http://scicat.maxiv.lu.se',
   fileserverBaseURL: 'http://l27.0.0.1:8889',
   archiveWorkflowEnabled: true,
   externalAuthEndpoint: '/auth/msad'

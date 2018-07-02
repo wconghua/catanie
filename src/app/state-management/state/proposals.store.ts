@@ -3,6 +3,7 @@ import { Proposal, Dataset, ProposalFilters } from '../models';
 export interface ProposalsState {
   proposals: Proposal[];
 	datasets: {[datasetId: string]: Dataset};
+	currentProposal: Proposal;
   activeFilters: ProposalFilters;
   filterValues: object;
 	hasFetched: boolean,
@@ -17,6 +18,7 @@ export interface ProposalsState {
 export const initialProposalsState: ProposalsState = {
   proposals: [],
 	datasets: {},
+  currentProposal: null,
   activeFilters: <ProposalFilters>{
     text: null,
     creationTime: null,
