@@ -16,6 +16,7 @@ import {
   MockUserApi
 } from 'shared/MockStubs';
 import {UserApi} from 'shared/sdk/services';
+import {TruncateModule} from "ng2-truncate";
 
 
 describe('ProposalTableComponent', () => {
@@ -25,7 +26,7 @@ describe('ProposalTableComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       schemas: [NO_ERRORS_SCHEMA],
-      imports: [MatTableModule, FormsModule, ReactiveFormsModule],
+      imports: [MatTableModule, FormsModule, ReactiveFormsModule, TruncateModule],
       declarations: [ProposalTablePureComponent]
     });
     TestBed.overrideComponent(ProposalTablePureComponent, {

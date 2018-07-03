@@ -7,6 +7,9 @@ import {
   OnDestroy,
 } from '@angular/core';
 
+import { TruncateModule } from 'ng2-truncate';
+
+
 import { Router, ActivatedRoute, Data } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MatSort, MatDialog } from '@angular/material';

@@ -34,6 +34,8 @@ import {
   MatSortModule,
   MatInputModule,
 } from '@angular/material';
+
+import {TruncateModule} from 'ng2-truncate';
 import {ProposalTablePureComponent} from "./proposal-table-pure/proposal-table-pure.component";
 
 @NgModule({
@@ -55,6 +57,7 @@ import {ProposalTablePureComponent} from "./proposal-table-pure/proposal-table-p
         MatOptionModule,
         MatInputModule,
         FormsModule,
+        TruncateModule,
 
     ],
     declarations: [

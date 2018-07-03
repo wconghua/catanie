@@ -33,7 +33,7 @@
 
     <ng-container matColumnDef="abstract">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Abstract</mat-header-cell>
-      <mat-cell *matCellDef="let proposal">{{proposal.abstract}}</mat-cell>
+      <mat-cell *matCellDef="let proposal">{{proposal.abstract| truncate : 40 }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="createdAt">
