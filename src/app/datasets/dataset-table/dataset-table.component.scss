@@ -24,20 +24,6 @@ $ds-archive: mat-palette($mat-green, 600);
   margin-left: 1em; 
 }  
 
-:host /deep/ .disabled-row {
-    pointer-events: none;
-    opacity: 0.2 !important;
-}
-
-:host /deep/ .mat-row:hover {
-  background-color: rgba(32, 32, 216, 0.3);
-  cursor: pointer;
-}
-
-:host /deep/ .datasets-header {
-  background-color: mat-color($primary);
-}
-
 :host /deep/ .mat-paginator {
   background-color: unset !important;
 }
