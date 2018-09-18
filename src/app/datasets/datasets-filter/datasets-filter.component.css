@@ -4,7 +4,7 @@
 }
 
 .mat-form-field {
-  width: 100%;
+  width: 10em;
 }
 
 :not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-semi-selected),
@@ -54,4 +54,8 @@
 
 .title {
   float: left;
+}
+
+.search-input{
+  width: 200px;
 }

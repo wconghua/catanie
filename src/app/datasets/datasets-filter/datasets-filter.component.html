@@ -1,97 +1,112 @@
 <mat-card>
   <form class="example-form">
     <div class="top-container">
-      <span class="title">Filter Results</span>
-      <button [disabled]="!(hasAppliedFilters$ | async)" mat-button class="clear-button" color="primary" (click)="clearFacets()">
-        <mat-icon>clear_all</mat-icon> Clear
+      <button [disabled]="!(hasAppliedFilters$ | async)" mat-button class="clear-button" color="primary"
+              (click)="clearFacets()">
+        <mat-icon>clear_all</mat-icon>
+        Clear
       </button>
       <div style="clear: both"></div>
     </div>
-
     <mat-form-field>
       <input matInput class="search-input" placeholder="Text Search" aria-label="Text Search"
-      [ngModel]="searchTerms$ | async"
-      (ngModelChange)="textSearchChanged($event)"
-      name="search"
+             [ngModel]="searchTerms$ | async"
+             (ngModelChange)="textSearchChanged($event)"
+             name="search"
       >
     </mat-form-field>
 
-    <mat-form-field>
-      <mat-chip-list #locationChipList>
-        <mat-chip *ngFor="let location of locationFilter$ | async" [removable]="true" (removed)="locationRemoved(location)">{{
-          location || 'No Location'
-          }} <mat-icon matChipRemove>cancel</mat-icon>
-        </mat-chip>
-      </mat-chip-list>
-      <input matInput class="location-input" [matChipInputFor]="locationChipList" placeholder="Location" aria-label="Location" [matAutocomplete]="loc">
+    <button (click)="show = !show" style="height:40px;width:200px">{{show ? 'Hide Filters' : 'Show Filters'}}</button>
+    <br>
+    <div *ngIf="show">
+      <mat-form-field>
+        <mat-chip-list #locationChipList>
+          <mat-chip *ngFor="let location of locationFilter$ | async" [removable]="true"
+                    (removed)="locationRemoved(location)">{{
+            location || 'No Location'
+            }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+        </mat-chip-list>
+        <input matInput class="location-input" [matChipInputFor]="locationChipList" placeholder="Location"
+               aria-label="Location" [matAutocomplete]="loc">
 
-      <mat-autocomplete #loc="matAutocomplete">
-        <mat-option class="options" (onSelectionChange)="locationSelected(getFacetId(fc))" *ngFor="let fc of locationFacetCounts$ | async">
-          <span>{{ getFacetId(fc, 'No Location') }} | </span>
-          <small>{{ getFacetCount(fc) }}</small>
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+        <mat-autocomplete #loc="matAutocomplete">
+          <mat-option class="options" (onSelectionChange)="locationSelected(getFacetId(fc))"
+                      *ngFor="let fc of locationFacetCounts$ | async">
+            <span>{{ getFacetId(fc, 'No Location') }} | </span>
+            <small>{{ getFacetCount(fc) }}</small>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
 
-    <mat-form-field>
-      <mat-chip-list #groupChipList>
-        <mat-chip *ngFor="let group of groupFilter$ | async" [removable]="true" (removed)="groupRemoved(group)">{{
-          group
-          }}<mat-icon matChipRemove>cancel</mat-icon>
-        </mat-chip>
-      </mat-chip-list>
-      <input matInput class="group-input" [matChipInputFor]="groupChipList" placeholder="Group" aria-label="Group" [matAutocomplete]="grp">
+      <mat-form-field>
+        <mat-chip-list #groupChipList>
+          <mat-chip *ngFor="let group of groupFilter$ | async" [removable]="true" (removed)="groupRemoved(group)">{{
+            group
+            }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+        </mat-chip-list>
+        <input matInput class="group-input" [matChipInputFor]="groupChipList" placeholder="Group" aria-label="Group"
+               [matAutocomplete]="grp">
 
-      <mat-autocomplete #grp="matAutocomplete">
-        <mat-option class="options" (onSelectionChange)="groupSelected(getFacetId(fc))" *ngFor="let fc of groupFacetCounts$ | async">
-          <span>{{ getFacetId(fc, 'No Group') }}</span> |
-          <small>{{ getFacetCount(fc) }}</small>
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+        <mat-autocomplete #grp="matAutocomplete">
+          <mat-option class="options" (onSelectionChange)="groupSelected(getFacetId(fc))"
+                      *ngFor="let fc of groupFacetCounts$ | async">
+            <span>{{ getFacetId(fc, 'No Group') }}</span> |
+            <small>{{ getFacetCount(fc) }}</small>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
 
-    <mat-form-field>
-      <mat-chip-list #typeChipList>
-        <mat-chip *ngFor="let type of typeFilter$ | async" [removable]="true" (removed)="typeRemoved(type)">{{
-          type
-          }}<mat-icon matChipRemove>cancel</mat-icon>
-        </mat-chip>
-      </mat-chip-list>
-      <input matInput class="type-input" [matChipInputFor]="typeChipList" placeholder="Type" aria-label="Type" [matAutocomplete]="type">
+      <mat-form-field>
+        <mat-chip-list #typeChipList>
+          <mat-chip *ngFor="let type of typeFilter$ | async" [removable]="true" (removed)="typeRemoved(type)">{{
+            type
+            }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+        </mat-chip-list>
+        <input matInput class="type-input" [matChipInputFor]="typeChipList" placeholder="Type" aria-label="Type"
+               [matAutocomplete]="type">
 
-      <mat-autocomplete #type="matAutocomplete">
-        <mat-option class="options" (onSelectionChange)="typeSelected(getFacetId(fc))" *ngFor="let fc of typeFacetCounts$ | async">
-          <span>{{ getFacetId(fc, 'No Type') }}</span> |
-          <small>{{ getFacetCount(fc) }}</small>
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+        <mat-autocomplete #type="matAutocomplete">
+          <mat-option class="options" (onSelectionChange)="typeSelected(getFacetId(fc))"
+                      *ngFor="let fc of typeFacetCounts$ | async">
+            <span>{{ getFacetId(fc, 'No Type') }}</span> |
+            <small>{{ getFacetCount(fc) }}</small>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
 
-    <mat-form-field>
-      <input matInput class="keyword-input" matInput placeholder="Keywords"   [matAutocomplete]="kw">
-      <mat-autocomplete #kw="matAutocomplete">
-        <mat-option class="options" (onSelectionChange)="keywordSelected(getFacetId(fc))" *ngFor="let fc of keywordFacetCounts$ | async">
-          <span>{{ getFacetId(g, 'No Keywords') }}</span>
-          <small>: {{ getFacetCount(g) }}</small>
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+      <mat-form-field>
+        <input matInput class="keyword-input" matInput placeholder="Keywords" [matAutocomplete]="kw">
+        <mat-autocomplete #kw="matAutocomplete">
+          <mat-option class="options" (onSelectionChange)="keywordSelected(getFacetId(fc))"
+                      *ngFor="let fc of keywordFacetCounts$ | async">
+            <span>{{ getFacetId(g, 'No Keywords') }}</span>
+            <small>: {{ getFacetCount(g) }}</small>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
 
-    <mat-form-field>
-      <input
-        matInput
-        class="date-input"
-        placeholder="Select a date range"
-        name="range-picker"
-        [satDatepicker]="picker"
-        [value]="creationTimeFilter$ | async"
-        (dateChange)="dateChanged($event)"
-      >
-      <sat-datepicker-toggle matSuffix [for]="picker">
-        <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-      </sat-datepicker-toggle>
-      <sat-datepicker #picker [rangeMode]="true"></sat-datepicker>
-    </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          class="date-input"
+          placeholder="Select a date range"
+          name="range-picker"
+          [satDatepicker]="picker"
+          [value]="creationTimeFilter$ | async"
+          (dateChange)="dateChanged($event)"
+        >
+        <sat-datepicker-toggle matSuffix [for]="picker">
+          <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+        </sat-datepicker-toggle>
+        <sat-datepicker #picker [rangeMode]="true"></sat-datepicker>
+      </mat-form-field>
+    </div>
 
   </form>
 </mat-card>
