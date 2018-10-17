@@ -165,8 +165,8 @@
         Preview
       </mat-header-cell>
       <mat-cell *matCellDef="let dataset">
-          <div *ngIf="(attachments$ | async) as attachments; else defaultImage">
-          Welcome
+          <div *ngIf="(dataset.datasetattachments) ; else defaultImage">
+              <img src="{{dataset.datasetattachments.thumbnail}}" style="height: 34px">
         </div>
 
         <ng-template #defaultImage>
