@@ -76,7 +76,7 @@ export class DatasetTableComponent implements OnInit, OnDestroy {
   datasets$ = this.store.pipe(select(getDatasets));
   currentPage$ = this.store.pipe(select(getPage));
   datasetsPerPage$ = this.store.pipe(select(getDatasetsPerPage));
-  datasetCount$ = this.store.select(getTotalSets);
+  datasetCount$ = this.store.pipe(select(getTotalSets));
   loading$ = this.store.pipe(select(getIsLoading));
   // These should be made part of the NgRX state management
   public currentMode: string;
@@ -127,7 +127,8 @@ export class DatasetTableComponent implements OnInit, OnDestroy {
     "proposalId",
     "ownerGroup",
     "archiveStatus",
-    "retrieveStatus"
+    "retrieveStatus",
+    "preview"
   ];
   visibleColumns = this.defaultColumns.filter(
     column => this.appConfig.disabledDatasetColumns.indexOf(column) === -1

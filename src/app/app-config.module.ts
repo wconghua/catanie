@@ -10,6 +10,7 @@ export class AppConfig {
   disabledDatasetColumns: string[];
   archiveWorkflowEnabled: boolean;
   editMetadataEnabled: boolean;
+  editPreviewEnabled: boolean;
   facility: string;
   shoppingCartEnabled: boolean;
 }
@@ -21,6 +22,7 @@ export const APP_DI_CONFIG: AppConfig = {
   disabledDatasetColumns: environment["disabledDatasetColumns"] || [],
   archiveWorkflowEnabled: environment["archiveWorkflowEnabled"] || null,
   editMetadataEnabled: environment["editMetadataEnabled"] || null,
+  editPreviewEnabled: environment["editPreviewEnabled"] || null,
   facility: environment["facility"] || null,
   shoppingCartEnabled: environment["shoppingCartEnabled"] || false
 };

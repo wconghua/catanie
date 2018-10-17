@@ -159,6 +159,22 @@
       </mat-cell>
     </ng-container>
 
+    <ng-container matColumnDef="preview">
+      <mat-header-cell *matHeaderCellDef>
+        <fa-icon [icon]="faUpload"></fa-icon>&nbsp;
+        Preview
+      </mat-header-cell>
+      <mat-cell *matCellDef="let dataset">
+          <div *ngIf="(attachments$ | async) as attachments; else defaultImage">
+          Welcome
+        </div>
+
+        <ng-template #defaultImage>
+          <img src="assets/images/esslogo.png" style="height: 34px">
+        </ng-template>
+      </mat-cell>
+    </ng-container>
+
     <!-- End of Column Definitions -->
 
     <mat-header-row class='datasets-header' *matHeaderRowDef="visibleColumns">
